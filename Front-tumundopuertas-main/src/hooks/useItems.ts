@@ -21,6 +21,8 @@ export function useItems() {
       } else if (!secureEndpoint.startsWith('https://')) {
         secureEndpoint = `https://${secureEndpoint}`;
       }
+      console.log("🔍 ITEMS - URL original:", endpoint );
+console.log("🔍 ITEMS - URL final:", secureEndpoint);
       const res = await fetch(secureEndpoint, {
         method: options?.method || "GET",
         headers: {
