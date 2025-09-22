@@ -3,11 +3,6 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { useState, useEffect } from "react";
 import { getApiUrl } from "@/lib/api";
 import { useNavigate } from "react-router";
 
@@ -59,10 +54,9 @@ const ModificarUsuario: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const apiUrl = (import.meta.env.VITE_API_URL || "https://localhost:3000").replace('http://', 'https://');
     setLoading(true);
     setError("");
-    fetch(`${apiUrl}/usuarios/all`)
+    fetch(`${getApiUrl()}/usuarios/all`)
       .then((response) => {
         if (!response.ok) throw new Error("Error al obtener usuarios");
         return response.json();
@@ -131,7 +125,6 @@ const ModificarUsuario: React.FC = () => {
       return;
     }
     try {
-      const apiUrl = (import.meta.env.VITE_API_URL || "https://localhost:3000").replace('http://', 'https://');
       const payload: any = {
         nombreCompleto: form.nombreCompleto,
         identificador: form.identificador,
@@ -140,7 +133,7 @@ const ModificarUsuario: React.FC = () => {
       if (form.password && form.password.length >= 6) {
         payload.password = form.password;
       }
-      const res = await fetch(`${apiUrl}/usuarios/${usuarioSeleccionado?._id}`, {
+      const res = await fetch(`${getApiUrl()}/usuarios/${usuarioSeleccionado?._id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

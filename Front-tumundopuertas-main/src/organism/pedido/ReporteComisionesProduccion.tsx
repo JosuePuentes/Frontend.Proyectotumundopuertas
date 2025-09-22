@@ -40,13 +40,12 @@ const ReporteComisionesProduccion: React.FC = () => {
     "sin-ayudante" | "solo-ayudante" | "todos"
   >("sin-ayudante");
   const [busquedaEmpleado, setBusquedaEmpleado] = useState("");
-  const apiUrl = (import.meta.env.VITE_API_URL || "https://localhost:8002").replace('http://', 'https://');
 
   useEffect(() => {
     const fetchEmpleados = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`${apiUrl}/empleados/all/`);
+        const res = await fetch(`${getApiUrl()}/empleados/all/`);
         const empleadosData = await res.json();
         empleadosData.forEach((empleado: any) => {
           if (
@@ -99,7 +98,7 @@ const ReporteComisionesProduccion: React.FC = () => {
     if (fechaInicio) params.append("fecha_inicio", fechaInicio);
     if (fechaFin) params.append("fecha_fin", fechaFin);
     const res = await fetch(
-      `${apiUrl}/pedidos/comisiones/produccion/terminadas/?${params.toString()}`
+      `${getApiUrl()}/pedidos/comisiones/produccion/terminadas/?${params.toString()}`
     );
     const json = await res.json();
     const jsonFormateado = json.map((empleado: EmpleadoComision) => ({

@@ -2,6 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import DetalleMasillar from "./DetalleMasillar";
 import AsignarArticulos from "@/organism/asignar/AsignarArticulos";
+import React, { useEffect, useState } from "react";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import DetalleMasillar from "./DetalleMasillar";
+import AsignarArticulos from "@/organism/asignar/AsignarArticulos";
+import { getApiUrl } from "@/lib/api";
 import { useEmpleado } from "@/hooks/useEmpleado";
 
 interface PedidoItem {

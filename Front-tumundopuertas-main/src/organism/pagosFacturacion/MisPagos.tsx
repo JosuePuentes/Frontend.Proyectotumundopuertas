@@ -62,8 +62,6 @@ const MisPagos: React.FC = () => {
   const [selectedPedidoForInvoice, setSelectedPedidoForInvoice] = useState<PedidoConPagos | null>(null);
   const [companyDetails, setCompanyDetails] = useState<CompanyDetails | null>(null);
 
-  const apiUrl = import.meta.env.VITE_API_URL.replace('http://', 'https://');
-
   const fetchPagos = async () => {
     setLoading(true);
     setError(null);
@@ -72,7 +70,7 @@ const MisPagos: React.FC = () => {
       if (fechaInicio) params.append("fecha_inicio", fechaInicio);
       if (fechaFin) params.append("fecha_fin", fechaFin);
 
-      const res = await fetch(`${apiUrl}/pedidos/mis-pagos?${params.toString()}`);
+      const res = await fetch(`${getApiUrl()}/pedidos/mis-pagos?${params.toString()}`);
       if (!res.ok) throw new Error("Error al obtener pagos");
 
       const data = await res.json();
@@ -86,7 +84,7 @@ const MisPagos: React.FC = () => {
 
   const fetchCompanyDetails = async () => {
     try {
-      const res = await fetch(`${apiUrl}/pedidos/company-details`);
+      const res = await fetch(`${getApiUrl()}/pedidos/company-details`);
       if (!res.ok) throw new Error("Error al obtener detalles de la empresa");
       const data = await res.json();
       setCompanyDetails(data);
@@ -109,7 +107,7 @@ const MisPagos: React.FC = () => {
     if (!selectedPedidoForInvoice) return;
 
     try {
-      const res = await fetch(`${apiUrl}/pedidos/${selectedPedidoForInvoice._id}/totalizar-pago`, {
+      const res = await fetch(`${getApiUrl()}/pedidos/${selectedPedidoForInvoice._id}/totalizar-pago`, {
         method: "PUT",
       });
       if (!res.ok) throw new Error("Error al totalizar el pago");

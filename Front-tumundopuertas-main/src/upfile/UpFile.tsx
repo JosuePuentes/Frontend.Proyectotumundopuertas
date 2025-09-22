@@ -1,44 +1,5 @@
 import React, { useRef, useState, useMemo, useCallback } from "react";
-
-// La función para obtener la URL prefirmada puede vivir fuera del componente
-// o en un archivo de servicios, ya que es una lógica reusable.
-const API_BASE_URL = (import.meta.env.VITE_API_URL || '').replace('http://', 'https://');
-
-/**
- * Función para obtener una URL prefirmada desde el backend.
- * @param objectName - El nombre del objeto en el bucket (ej. 'uploads/imagen.jpg').
- * @param operation - La operación deseada ('put_object' para subir, 'get_object' para descargar).
- * @param contentType - El tipo de contenido del archivo (ej. 'image/jpeg'), necesario para 'put_object'.
- * @param expiresIn - Duración de la validez de la URL en segundos (por defecto 1 hora para GET, 10 minutos para PUT).
- * @returns La URL prefirmada.
- * @throws Error si la URL prefirmada no se puede obtener.
- */
-export async function getPresignedUrl(
-  objectName: string,
-  operation: "put_object" | "get_object",
-  contentType?: string,
-  expiresIn?: number
-): Promise<string> {
-  const defaultExpiresIn = operation === "get_object" ? 3600 : 600; // 1h para GET, 10min para PUT
-  const res = await fetch(`${API_BASE_URL}/files/presigned-url`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      object_name: objectName,
-      operation: operation,
-      content_type: contentType, // Solo relevante para put_object
-      expires_in: expiresIn || defaultExpiresIn,
-    }),
-  });
-
-  const data = await res.json();
-  if (!res.ok || !data.presigned_url) {
-    throw new Error(
-      data.error || `No se pudo obtener la URL prefirmada para ${operation}.`
-    );
-  }
-  return data.presigned_url;
-}
+import { getPresignedUrl } from "@/lib/api";
 
 interface UpFileProps {
   onUploadSuccess?: (objectName: string) => void; // Llamado cuando se sube correctamente
@@ -63,20 +24,17 @@ const UpFile: React.FC<UpFileProps> = ({
   const [error, setError] = useState<string>("");
   const [statusMessage, setStatusMessage] = useState<string>(""); // Mensajes de estado
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [preview, setPreview] = useState<string | null>(initialFileUrl || null);
 
-  // Mantiene el nombre del objeto subido para referencia
-  // Útil si quieres mostrar la URL pública después de la subida
-  const [uploadedObjectName, setUploadedObjectName] = useState<string>(initialFileUrl || "");
   // Clear states when a new file is selected or component is reset
   const resetState = useCallback(() => {
-    uploadedObjectName
     setSelectedFile(null);
     setUploading(false);
     setProgress(0);
     setError("");
     setStatusMessage("");
-    // No reseteamos uploadedObjectName aquí si es initialFileUrl
-  }, []);
+    setPreview(initialFileUrl || null);
+  }, [initialFileUrl]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     resetState(); // Resetear estado al seleccionar un nuevo archivo
@@ -106,6 +64,9 @@ const UpFile: React.FC<UpFileProps> = ({
 
       setSelectedFile(file);
       setStatusMessage(`Archivo seleccionado: ${file.name}`);
+      if (file.type.startsWith("image/")) {
+        setPreview(URL.createObjectURL(file));
+      }
     } else {
       setSelectedFile(null);
     }
@@ -156,7 +117,6 @@ const UpFile: React.FC<UpFileProps> = ({
           if (xhr.status === 200) {
             setProgress(100);
             setStatusMessage("¡Subida completada!");
-            setUploadedObjectName(objectName); // Guarda el nombre del objeto para futuras referencias
             if (onUploadSuccess) {
               onUploadSuccess(objectName); // Notifica al componente padre el nombre del objeto
             }
@@ -193,13 +153,13 @@ const UpFile: React.FC<UpFileProps> = ({
     if (selectedFile && selectedFile.type.startsWith("image/")) {
       return URL.createObjectURL(selectedFile);
     }
-    return null;
-  }, [selectedFile]);
+    return preview;
+  }, [selectedFile, preview]);
 
   // Limpiar URL de objeto cuando el componente se desmonte o el archivo cambie
   React.useEffect(() => {
     return () => {
-      if (previewUrl) {
+      if (previewUrl && previewUrl.startsWith("blob:")) {
         URL.revokeObjectURL(previewUrl);
       }
     };
@@ -241,6 +201,16 @@ const UpFile: React.FC<UpFileProps> = ({
         <span>{selectedFile ? "Cambiar archivo" : "Seleccionar archivo"}</span>
       </button>
 
+      {previewUrl && (
+        <div className="mt-2 text-center">
+          <img
+            src={previewUrl}
+            alt="Previsualización"
+            className="max-w-full h-auto max-h-48 rounded-md border border-gray-200 object-contain mx-auto"
+          />
+        </div>
+      )}
+
       {/* Info del archivo seleccionado y acciones */}
       {selectedFile && (
         <div className="flex flex-col gap-2 p-3 bg-gray-50 rounded-md border border-gray-200">
@@ -250,16 +220,6 @@ const UpFile: React.FC<UpFileProps> = ({
               {(selectedFile.size / (1024 * 1024)).toFixed(2)} MB
             </span>
           </div>
-
-          {previewUrl && (
-            <div className="mt-2 text-center">
-              <img
-                src={previewUrl}
-                alt="Previsualización"
-                className="max-w-full h-auto max-h-48 rounded-md border border-gray-200 object-contain mx-auto"
-              />
-            </div>
-          )}
 
           <button
             onClick={handleUpload}

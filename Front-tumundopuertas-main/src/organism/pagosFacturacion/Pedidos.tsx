@@ -11,7 +11,6 @@ import {
 import { Loader2, AlertCircle } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { getApiUrl } from "@/lib/api";
-import { getApiUrl } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 // Componente para gestionar pagos y abonos
 const PagoManager: React.FC<{
@@ -31,7 +30,7 @@ const PagoManager: React.FC<{
     setError(null);
     setSuccess(null);
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL.replace('http://', 'https://')}/pedidos/${pedidoId}/pago`, {
+      const res = await fetch(`${getApiUrl()}/pedidos/${pedidoId}/pago`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ pago: nuevoEstado }),

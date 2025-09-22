@@ -35,8 +35,6 @@ const CargarInventarioExcel: React.FC = () => {
   const [showInventoryPreview, setShowInventoryPreview] = useState(false);
   const { data: currentInventory, fetchItems } = useItems(); // Use useItems hook
 
-  const apiUrl = (import.meta.env.VITE_API_URL || "https://localhost:3000").replace('http://', 'https://');
-
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -148,7 +146,7 @@ const CargarInventarioExcel: React.FC = () => {
   };
 
   const handleShowInventoryPreview = () => {
-    fetchItems(`${apiUrl}/inventario/all`); // Fetch all items
+    fetchItems(`${getApiUrl()}/inventario/all`); // Fetch all items
     setShowInventoryPreview(true);
   };
 
