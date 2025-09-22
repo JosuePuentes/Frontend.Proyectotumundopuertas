@@ -1,11 +1,12 @@
 export const getApiUrl = () => {
-  const apiUrl = import.meta.env.VITE_API_URL || 'https://crafteo.onrender.com'; // Use environment variable or hardcoded fallback
-  // Remove any existing http:// or https://
-  // This step is technically redundant now, but kept for robustness
-  const cleanApiUrl = apiUrl.replace(/^https?:\/\//, '');
-  // Remove any trailing slashes
-  const finalApiUrl = cleanApiUrl.replace(/\/$/, '');
-  return `https://${finalApiUrl}`; // Always prepend https://
+  let apiUrl = import.meta.env.VITE_API_URL || 'https://crafteo.onrender.com';
+  if (!apiUrl.startsWith('https://')) {
+    apiUrl = apiUrl.replace(/^http:\/\//, 'https://'); // Replace http with https
+    if (!apiUrl.startsWith('https://')) { // If it didn't start with http or https, prepend https
+      apiUrl = `https://${apiUrl}`;
+    }
+  }
+  return apiUrl.replace(/\/$/, ''); // Ensure no trailing slash
 };
 
 /**
