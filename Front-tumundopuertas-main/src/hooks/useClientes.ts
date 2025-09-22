@@ -15,7 +15,13 @@ export function useClientes() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(endpoint, {
+      let secureEndpoint = endpoint;
+      if (secureEndpoint.startsWith('http://')) {
+        secureEndpoint = secureEndpoint.replace('http://', 'https://');
+      } else if (!secureEndpoint.startsWith('https://')) {
+        secureEndpoint = `https://${secureEndpoint}`;
+      }
+      const res = await fetch(secureEndpoint, {
         method: options?.method || "GET",
         headers: {
           "Content-Type": "application/json",
