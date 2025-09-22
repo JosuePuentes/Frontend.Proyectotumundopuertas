@@ -1,3 +1,4 @@
+import React, { useState, useEffect, useMemo } from "react";
 import { getApiUrl } from "@/lib/api";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -149,7 +150,7 @@ const PedidoRow: React.FC<{ pedido: PedidoRuta; now: number; isProduccion: boole
       <td className="p-3">
         {nombresAsignados.length > 0 ? (
           <div className="flex flex-col gap-1">
-            {nombresAsignados.map((nombre) => (
+            {nombresAsignados.map((nombre: string) => (
               <span key={nombre} className="text-sm text-gray-700">
                 {nombre}
               </span>

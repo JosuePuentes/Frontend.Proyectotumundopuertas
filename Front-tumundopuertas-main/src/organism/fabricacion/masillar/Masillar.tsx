@@ -2,10 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import DetalleMasillar from "./DetalleMasillar";
 import AsignarArticulos from "@/organism/asignar/AsignarArticulos";
-import React, { useEffect, useState } from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import DetalleMasillar from "./DetalleMasillar";
-import AsignarArticulos from "@/organism/asignar/AsignarArticulos";
 import { getApiUrl } from "@/lib/api";
 import { useEmpleado } from "@/hooks/useEmpleado";
 
@@ -90,7 +86,7 @@ const PedidosMasillar: React.FC = () => {
           <p className="text-gray-500">No hay pedidos en pintar.</p>
         ) : (
           <ul className="space-y-8">
-            {masillar.map((pedido) => (
+            {masillar.map((pedido: Pedido) => (
               <li key={pedido._id} className="border rounded-xl bg-white shadow p-4 transition-all duration-300 hover:shadow-lg">
                 <DetalleMasillar pedido={pedido} />
                 <div className="mt-4">
@@ -98,7 +94,7 @@ const PedidosMasillar: React.FC = () => {
                     estado_general={"orden2"}
                     nuevo_estado_general="orden3"
                     numeroOrden="2"
-                    items={pedido.items.map((item) => ({
+                    items={pedido.items.map((item: PedidoItem) => ({
                       id: item.id,
                       codigo: item.codigo,
                       nombre: item.nombre,

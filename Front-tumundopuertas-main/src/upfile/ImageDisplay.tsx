@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getPresignedUrl } from "./UpFile";
+import { getPresignedUrl } from "../lib/api";
 
 interface ImageDisplayProps {
   imageName: string;
