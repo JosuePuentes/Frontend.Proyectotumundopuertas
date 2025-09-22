@@ -31,7 +31,7 @@ const CrearCliente: React.FC = () => {
       setMensaje("Completa todos los campos obligatorios.");
       return;
     }
-    const apiUrl = import.meta.env.VITE_API_URL;
+    const apiUrl = "https://crafteo.onrender.com";
     const secureApiUrl = `https://${apiUrl.replace(/^(http|https):\/\//, '')}`;
     fetch(`${secureApiUrl}/clientes`, {
       method: "POST",
