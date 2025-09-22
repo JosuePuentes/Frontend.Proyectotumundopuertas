@@ -28,10 +28,9 @@ const ModificarCliente: React.FC = () => {
   const [mensaje, setMensaje] = useState<string>("");
 
   useEffect(() => {
-    const apiUrl = (import.meta.env.VITE_API_URL || "https://localhost:3000").replace('http://', 'https://');
     setLoading(true);
     setError("");
-    fetch(`${apiUrl}/clientes/all`)
+    fetch(`https://crafteo.onrender.com/clientes/all/`)
       .then((response) => {
         if (!response.ok) throw new Error("Error al obtener clientes");
         return response.json();
@@ -86,8 +85,7 @@ const ModificarCliente: React.FC = () => {
       return;
     }
     try {
-      const apiUrl = (import.meta.env.VITE_API_URL || "https://localhost:3000").replace('http://', 'https://');
-      const res = await fetch(`${apiUrl}/clientes/id/${clienteSeleccionado?._id}`, {
+      const res = await fetch(`https://crafteo.onrender.com/clientes/id/${clienteSeleccionado?._id}/`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
