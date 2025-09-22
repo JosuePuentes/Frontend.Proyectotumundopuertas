@@ -4,6 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router";
+import { getApiUrl } from "@/lib/api";
 
 interface Cliente {
   _id: string;
@@ -30,7 +31,7 @@ const ModificarCliente: React.FC = () => {
   useEffect(() => {
     setLoading(true);
     setError("");
-    fetch(`https://crafteo.onrender.com/clientes/all/`)
+    fetch(`${getApiUrl()}/clientes/all/`)
       .then((response) => {
         if (!response.ok) throw new Error("Error al obtener clientes");
         return response.json();
@@ -85,7 +86,7 @@ const ModificarCliente: React.FC = () => {
       return;
     }
     try {
-      const res = await fetch(`https://crafteo.onrender.com/clientes/id/${clienteSeleccionado?._id}/`, {
+      const res = await fetch(`${getApiUrl()}/clientes/id/${clienteSeleccionado?._id}/`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
