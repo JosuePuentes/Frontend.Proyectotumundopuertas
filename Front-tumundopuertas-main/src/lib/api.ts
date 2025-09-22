@@ -1,8 +1,10 @@
 export const getApiUrl = () => {
-  let apiUrl = import.meta.env.VITE_API_URL || 'https://crafteo.onrender.com';
-  // Ensure it always starts with https://
-  apiUrl = apiUrl.replace(/^https?:\]\[\]/, ''); // Remove any existing http:// or https://
-  return `https://${apiUrl}`; // Prepend https://
+  let apiUrl = import.meta.env.VITE_API_URL || 'crafteo.onrender.com'; // Default to just the domain
+  // Remove any existing http:// or https://
+  apiUrl = apiUrl.replace(/^https?:\/\//, '');
+  // Remove any trailing slashes
+  apiUrl = apiUrl.replace(/\/$/, '');
+  return `https://${apiUrl}`; // Always prepend https://
 };
 
 /**
