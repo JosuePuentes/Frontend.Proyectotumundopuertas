@@ -1,3 +1,7 @@
 {
-  "root": "Front-tumundopuertas-main"
+  "root": "Front-tumundopuertas-main",
+  "buildCommand": "npm install && npm run build",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/" }
+  ]
 }
