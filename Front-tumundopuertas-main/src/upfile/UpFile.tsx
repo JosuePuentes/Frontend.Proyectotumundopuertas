@@ -2,7 +2,7 @@ import React, { useRef, useState, useMemo, useCallback } from "react";
 
 // La función para obtener la URL prefirmada puede vivir fuera del componente
 // o en un archivo de servicios, ya que es una lógica reusable.
-const API_BASE_URL = import.meta.env.VITE_API_URL;
+const API_BASE_URL = (import.meta.env.VITE_API_URL || '').replace('http://', 'https://');
 
 /**
  * Función para obtener una URL prefirmada desde el backend.
