@@ -21,6 +21,8 @@ export function useClientes() {
       } else if (!secureEndpoint.startsWith('https://')) {
         secureEndpoint = `https://${secureEndpoint}`;
       }
+      console.log("🔍 CLIENTES - URL original:", endpoint );
+console.log("🔍 CLIENTES - URL final:", secureEndpoint);
       const res = await fetch(secureEndpoint, {
         method: options?.method || "GET",
         headers: {
