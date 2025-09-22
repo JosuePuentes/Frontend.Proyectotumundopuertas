@@ -33,7 +33,7 @@ const CrearCliente: React.FC = () => {
     }
     const apiUrl = "https://crafteo.onrender.com";
     const secureApiUrl = `https://${apiUrl.replace(/^(http|https):\/\//, '')}`;
-    fetch(`${secureApiUrl}/clientes`, {
+    fetch(`${secureApiUrl}/clientes/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
