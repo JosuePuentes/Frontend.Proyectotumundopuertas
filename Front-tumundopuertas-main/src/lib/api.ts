@@ -1,5 +1,5 @@
 export const getApiUrl = () => {
-  const apiUrl = 'crafteo.onrender.com'; // Hardcode the production domain
+  const apiUrl = import.meta.env.VITE_API_URL || 'https://crafteo.onrender.com'; // Use environment variable or hardcoded fallback
   // Remove any existing http:// or https://
   // This step is technically redundant now, but kept for robustness
   const cleanApiUrl = apiUrl.replace(/^https?:\/\//, '');
