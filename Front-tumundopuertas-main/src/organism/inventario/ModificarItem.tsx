@@ -11,6 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { getApiUrl } from "@/lib/api";
 import { useItems } from "@/hooks/useItems";
 import { Button } from "@/components/ui/button";
 
@@ -60,7 +61,7 @@ const ModificarItem: React.FC<{ itemId: string; modalClose: () => void }> = ({
   // Fetch del item
   useEffect(() => {
     const fetchItem = async () => {
-      const apiUrl = (import.meta.env.VITE_API_URL || "https://localhost:3000").replace('http://', 'https://');
+      const apiUrl = getApiUrl();
       try {
         const res = await fetch(`${apiUrl}/inventario/id/${itemId}/`);
         if (!res.ok) throw new Error("No se pudo cargar el item");
@@ -137,7 +138,7 @@ const ModificarItem: React.FC<{ itemId: string; modalClose: () => void }> = ({
       return;
     }
 
-    const apiUrl = (import.meta.env.VITE_API_URL || "https://localhost:3000").replace('http://', 'https://');
+    const apiUrl = getApiUrl();
     await fetchItems(`${apiUrl}/inventario/id/${item._id}/`, {
       method: "PUT",
       body: {

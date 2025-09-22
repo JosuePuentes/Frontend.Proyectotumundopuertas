@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import { getApiUrl } from "@/lib/api";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
@@ -209,7 +209,7 @@ const PedidoGroup: React.FC<{ title: string; pedidos: PedidoRuta[]; now: number 
 const DashboardPedidos: React.FC = () => {
   const [pedidos, setPedidos] = useState<PedidoRuta[]>([]);
   const [now, setNow] = useState(Date.now());
-      const apiUrl = (import.meta.env.VITE_API_URL || "https://localhost:3000").replace('http://', 'https://');
+      const apiUrl = getApiUrl();
       const fetchPedidos = () => {
     fetch(`${apiUrl}/pedidos/produccion/ruta`)
       .then((res) => res.json())

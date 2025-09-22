@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import DetalleFacturacion from "./DetalleFacturacion";
 import AsignarArticulos from "@/organism/asignar/AsignarArticulos";
+import { getApiUrl } from "@/lib/api";
 import { useEmpleado } from "@/hooks/useEmpleado";
 
 const FacturacionPage: React.FC = () => {
@@ -14,7 +15,7 @@ const FacturacionPage: React.FC = () => {
     setLoading(true);
     setError("");
     try {
-      const apiUrl = (import.meta.env.VITE_API_URL || "https://localhost:3000").replace('http://', 'https://');
+      const apiUrl = getApiUrl();
       const res = await fetch(
         `${apiUrl}/pedidos/estado/?estado_general=orden4`
       );
@@ -30,7 +31,7 @@ const FacturacionPage: React.FC = () => {
 
   useEffect(() => {
     fetchPedidosFacturacion();
-    fetchEmpleado(`${import.meta.env.VITE_API_URL.replace('http://', 'https://')}/empleados/all/`);
+    fetchEmpleado(`${getApiUrl()}/empleados/all/`);
   }, []);
 
   return (

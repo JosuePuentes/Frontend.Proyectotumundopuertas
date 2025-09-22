@@ -5,6 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { getApiUrl } from "@/lib/api";
 import { useItems } from "@/hooks/useItems";
 
 interface ItemForm {
@@ -73,7 +74,7 @@ const CrearItem: React.FC = () => {
       setMensaje("Completa los campos obligatorios.");
       return;
     }
-    const apiUrl = (import.meta.env.VITE_API_URL || "https://localhost:3000").replace('http://', 'https://');
+    const apiUrl = getApiUrl();
     await fetchItems(`${apiUrl}/inventario`, {
       method: "POST",
       body: {

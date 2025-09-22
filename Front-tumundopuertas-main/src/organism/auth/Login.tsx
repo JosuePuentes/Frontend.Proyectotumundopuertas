@@ -1,3 +1,4 @@
+import { getApiUrl } from "@/lib/api";
 import React, { useState } from "react";
 
 interface LoginResponse {
@@ -19,7 +20,7 @@ const Login: React.FC = () => {
 		setLoading(true);
 		setError(null);
 		try {
-			const apiUrl = (import.meta.env.VITE_API_URL || "https://localhost:3000").replace('http://', 'https://');
+			const apiUrl = getApiUrl();
 			const res = await fetch(`${apiUrl}/auth/login/`, {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },

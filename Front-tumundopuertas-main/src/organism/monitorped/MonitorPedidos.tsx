@@ -3,6 +3,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
+import { getApiUrl } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 
 interface Pedido {
@@ -25,7 +26,7 @@ const MonitorPedidos: React.FC = () => {
   const [fechaInicio, setFechaInicio] = useState<string>("");
   const [fechaFin, setFechaFin] = useState<string>("");
   const [shouldSearch, setShouldSearch] = useState(false);
-  const apiUrl = (import.meta.env.VITE_API_URL || "https://localhost:8002").replace('http://', 'https://');
+  const apiUrl = getApiUrl();
 
   const ordenMap: Record<string, string> = {
     orden1: "Herreria",

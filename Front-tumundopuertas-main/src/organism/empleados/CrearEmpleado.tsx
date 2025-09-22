@@ -1,3 +1,4 @@
+import { getApiUrl } from "@/lib/api";
 import React, { useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -52,7 +53,7 @@ const CrearEmpleado: React.FC = () => {
             setErrorMsg("Completa todos los campos obligatorios.");
             return;
         }
-        const apiUrl = (import.meta.env.VITE_API_URL || "https://localhost:3000").replace('http://', 'https://');
+        const apiUrl = getApiUrl();
         try {
             const response = await fetch(`${apiUrl}/empleados`, {
                 method: "POST",

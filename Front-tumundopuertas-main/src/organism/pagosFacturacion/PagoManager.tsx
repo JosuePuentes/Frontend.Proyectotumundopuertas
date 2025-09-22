@@ -8,6 +8,7 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
+import { getApiUrl } from "@/lib/api";
 import { Loader2 } from "lucide-react";
 
 interface PagoManagerProps {
@@ -26,7 +27,7 @@ const PagoManager: React.FC<PagoManagerProps> = ({ pedidoId, pagoInicial }) => {
 
     setLoading(true);
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL.replace('http://', 'https://')}/pedidos/${pedidoId}/pago`, {
+      const res = await fetch(`${getApiUrl()}/pedidos/${pedidoId}/pago`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ pago, monto }),

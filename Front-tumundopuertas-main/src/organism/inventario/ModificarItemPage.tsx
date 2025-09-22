@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
 import ModificarItem from "./ModificarItem";
+import { getApiUrl } from "@/lib/api";
 import { useItems } from "@/hooks/useItems";
 
 // Define los tipos de datos
@@ -50,7 +51,7 @@ const ModificarItemPage: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    const apiUrl = (import.meta.env.VITE_API_URL || "https://localhost:3000").replace('http://', 'https://');
+    const apiUrl = getApiUrl();
     fetchItems(`${apiUrl}/inventario/all`);
   }, []);
 

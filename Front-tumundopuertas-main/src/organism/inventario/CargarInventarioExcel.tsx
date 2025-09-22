@@ -11,6 +11,7 @@ import {
   TableBody,
   TableCell,
 } from '@/components/ui/table';
+import { getApiUrl } from "@/lib/api";
 import { useItems } from '@/hooks/useItems'; // Import useItems hook
 
 interface InventarioItem {
@@ -85,7 +86,7 @@ const CargarInventarioExcel: React.FC = () => {
     console.log('Datos a enviar al backend para guardar:', items);
 
     try {
-      const apiUrl = (import.meta.env.VITE_API_URL || "https://localhost:3000").replace('http://', 'https://');
+      const apiUrl = getApiUrl();
       const response = await fetch(`${apiUrl}/inventario/bulk`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -115,7 +116,7 @@ const CargarInventarioExcel: React.FC = () => {
     console.log('Datos a enviar al backend para actualizar:', items);
 
     try {
-      const apiUrl = (import.meta.env.VITE_API_URL || "https://localhost:3000").replace('http://', 'https://');
+      const apiUrl = getApiUrl();
       const response = await fetch(`${apiUrl}/inventario/bulk`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

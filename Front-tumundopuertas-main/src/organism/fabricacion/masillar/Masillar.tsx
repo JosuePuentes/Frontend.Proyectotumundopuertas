@@ -49,7 +49,7 @@ const PedidosMasillar: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const apiUrl = (import.meta.env.VITE_API_URL || "https://localhost:3000").replace('http://', 'https://');
+      const apiUrl = getApiUrl();
       const res = await fetch(`${apiUrl}/pedidos/all/?orden=orden2`);
       if (!res.ok) throw new Error("Error al obtener pedidos");
       const pedidos = await res.json();
@@ -64,7 +64,7 @@ const PedidosMasillar: React.FC = () => {
   useEffect(() => {
     setLoading(true);
     fetchPedidos();
-    fetchEmpleado(`${import.meta.env.VITE_API_URL.replace('http://', 'https://')}/empleados/all/`);
+    fetchEmpleado(`${getApiUrl()}/empleados/all/`);
   }, []);
 
 

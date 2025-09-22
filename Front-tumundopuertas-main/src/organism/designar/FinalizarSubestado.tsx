@@ -1,3 +1,4 @@
+import { getApiUrl } from "@/lib/api";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 
@@ -22,7 +23,7 @@ const FinalizarSubestado: React.FC<FinalizarSubestadoProps> = ({
     setLoading(true);
     setMessage("");
     try {
-      const apiUrl = (import.meta.env.VITE_API_URL || "https://localhost:3000").replace('http://', 'https://');
+      const apiUrl = getApiUrl();
       // Usar el nuevo endpoint para finalizar pedido y subestado en una sola petición
       const res = await fetch(`${apiUrl}/pedidos/finalizar/`, {
         method: "PUT",

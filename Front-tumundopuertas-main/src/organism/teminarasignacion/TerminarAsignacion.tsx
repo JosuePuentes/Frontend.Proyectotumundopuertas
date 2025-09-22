@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { getApiUrl } from "@/lib/api";
 import useTerminarEmpleado from "@/hooks/useTerminarEmpleado";
 import ImageDisplay from "@/upfile/ImageDisplay";
 interface Asignacion {
@@ -28,7 +29,7 @@ const TerminarAsignacion: React.FC = () => {
   const [asignaciones, setAsignaciones] = useState<Asignacion[]>([]);
   const [loading, setLoading] = useState(false);
   const identificador = localStorage.getItem("identificador");
-  const apiUrl = (import.meta.env.VITE_API_URL || "https://localhost:8002").replace('http://', 'https://');
+  const apiUrl = getApiUrl();
 
   const { terminarEmpleado } = useTerminarEmpleado()
 

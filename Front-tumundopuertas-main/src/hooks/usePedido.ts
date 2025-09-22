@@ -1,3 +1,4 @@
+import { getApiUrl } from "@/lib/api";
 import { useState } from "react";
 
 type FetchOptions = {
@@ -16,7 +17,7 @@ export function usePedido() {
     setLoading(true);
     setError(null);
     setStatus(null);
-    const apiurl = import.meta.env.VITE_API_URL.replace('http://', 'https://');
+    const apiurl = getApiUrl();
     try {
       const res = await fetch(`${apiurl}${endpoint}`, {
         method: options?.method || "GET",

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import DetallePreparar from "./DetallePreparar";
 import AsignarArticulos from "@/organism/asignar/AsignarArticulos";
+import { getApiUrl } from "@/lib/api";
 import { useEmpleado } from "@/hooks/useEmpleado";
 
 // Tipos para pedido y item
@@ -39,7 +40,7 @@ const PedidosPreparar: React.FC = () => {
     setLoading(true);
     setError("");
     try {
-      const apiUrl = (import.meta.env.VITE_API_URL || "https://localhost:3000").replace('http://', 'https://');
+      const apiUrl = getApiUrl();
       const res = await fetch(`${apiUrl}/pedidos/all/?orden=orden3`);
       if (!res.ok) throw new Error("Error al obtener pedidos");
       const pedidos = await res.json();
@@ -53,7 +54,7 @@ const PedidosPreparar: React.FC = () => {
 
   useEffect(() => {
     fetchPedidos();
-    fetchEmpleado(`${import.meta.env.VITE_API_URL.replace('http://', 'https://')}/empleados/all/`);
+    fetchEmpleado(`${getApiUrl()}/empleados/all/`);
   }, []);
 
   return (

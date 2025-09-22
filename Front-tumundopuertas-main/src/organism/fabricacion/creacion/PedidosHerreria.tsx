@@ -3,6 +3,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { usePedido } from "@/hooks/usePedido";
 import DetalleHerreria from "./DetalleHerreria";
 import { useEmpleado } from "@/hooks/useEmpleado";
+import { getApiUrl } from "@/lib/api";
 import AsignarArticulos from "@/organism/asignar/AsignarArticulos";
 
 // Tipos explícitos
@@ -53,7 +54,7 @@ const PedidosHerreria: React.FC = () => {
     fetchPedido("/pedidos/estado/?estado_general=orden1&estado_general=pendiente&/")
       .catch(() => setError("Error al cargar los pedidos"))
       .finally(() => setLoading(false));
-    fetchEmpleado(`${import.meta.env.VITE_API_URL.replace('http://', 'https://')}/empleados/all/`);
+    fetchEmpleado(`${getApiUrl()}/empleados/all/`);
     console.log("Pedidos cargados:", dataPedidos);
   }, []);
 

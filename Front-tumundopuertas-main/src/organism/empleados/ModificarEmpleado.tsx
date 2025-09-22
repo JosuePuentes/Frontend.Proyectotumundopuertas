@@ -1,3 +1,4 @@
+import { getApiUrl } from "@/lib/api";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -63,7 +64,7 @@ const ModificarEmpleado: React.FC = () => {
   });
 
   useEffect(() => {
-    const apiUrl = (import.meta.env.VITE_API_URL || "https://localhost:3000").replace('http://', 'https://');
+    const apiUrl = getApiUrl();
     setLoading(true);
     setError("");
     fetch(`${apiUrl}/empleados/all`)
@@ -99,7 +100,7 @@ const ModificarEmpleado: React.FC = () => {
   };
 
   const onSubmit = async (data: EmpleadoForm) => {
-    const apiUrl = (import.meta.env.VITE_API_URL || "https://localhost:3000").replace('http://', 'https://');
+    const apiUrl = getApiUrl();
     setMensaje("");
     setError("");
     try {

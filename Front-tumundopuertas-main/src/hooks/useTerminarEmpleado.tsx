@@ -1,3 +1,4 @@
+import { getApiUrl } from "@/lib/api";
 import { useState } from "react";
 
 interface UseTerminarEmpleadoOptions<T = any> {
@@ -32,7 +33,8 @@ function useTerminarEmpleado<T = any>(
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL.replace('http://', 'https://')}/pedidos/asignacion/terminar`, {
+            const apiUrl = getApiUrl();
+            const response = await fetch(`${apiUrl}/pedidos/asignacion/terminar`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",

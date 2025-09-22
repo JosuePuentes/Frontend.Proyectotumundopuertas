@@ -10,6 +10,8 @@ import {
 } from "@/components/ui/table";
 import { Loader2, AlertCircle } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { getApiUrl } from "@/lib/api";
+import { getApiUrl } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 // Componente para gestionar pagos y abonos
 const PagoManager: React.FC<{
@@ -51,7 +53,8 @@ const PagoManager: React.FC<{
     setError(null);
     setSuccess(null);
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL.replace('http://', 'https://')}/pedidos/${pedidoId}/pago`, {
+      const apiUrl = getApiUrl();
+      const res = await fetch(`${apiUrl}/pedidos/${pedidoId}/pago`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ pago: estado, monto: parseFloat(monto) }),
@@ -158,8 +161,9 @@ const Pedidos: React.FC = () => {
       if (fechaInicio) params += `&fecha_inicio=${fechaInicio}`;
       if (fechaFin) params += `&fecha_fin=${fechaFin}`;
 
+      const apiUrl = getApiUrl();
       const res = await fetch(
-        `${import.meta.env.VITE_API_URL.replace('http://', 'https://')}/pedidos/estado/?${params}`
+        `${apiUrl}/pedidos/estado/?${params}`
       );
       if (!res.ok) throw new Error("Error al obtener pedidos");
       const data = await res.json();
