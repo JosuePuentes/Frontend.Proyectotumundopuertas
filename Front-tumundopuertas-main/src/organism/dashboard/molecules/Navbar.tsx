@@ -25,6 +25,7 @@ const defaultLinks = [
   { label: "Asignar Envios", href: "/envios" },
   { label: "Pagos", href: "/pagos" },
   { label: "Mis Pagos", href: "/mispagos" },
+  { label: "Resumen de Venta Diaria", href: "/resumen-venta-diaria" },
   { label: "Dashboard", href: "/dashboard" },
   { label: "Crear Empleado", href: "/crearempleado" },
   { label: "Modificar Empleado", href: "/modificarempleado" },
@@ -54,6 +55,7 @@ const permisosRuta: Record<string, string | null> = {
   "/monitorpedidos": "monitorpedidos",
   "/pagos": "pagos",
   "/mispagos": "pagos",
+  "/resumen-venta-diaria": "pagos",
   "/home": null,
   "/": null,
 };
