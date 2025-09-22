@@ -277,7 +277,6 @@ const CrearPedido: React.FC = () => {
           cantidad: item.cantidad,
           activo: itemData?.activo ?? true,
           detalleitem: item.detalleitem || "",
-          imagenes: itemData?.imagenes ?? [],
         };
       }),
       seguimiento,
@@ -476,7 +475,7 @@ const CrearPedido: React.FC = () => {
 
             <div className="space-y-4">
               {selectedItems.map((item, idx) => {
-                const filtered: any[] = (itemsData as any[])?.filter((it) =>
+                const filtered: any[] = (itemsData || []).filter((it: any) =>
                   it.nombre.toLowerCase().includes(item.search.toLowerCase())
                 );
 
