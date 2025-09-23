@@ -191,7 +191,7 @@ const MisPagos: React.FC = () => {
               <SelectValue placeholder="Filtrar por estado" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">Todos</SelectItem>
+              <SelectItem value="all">Todos</SelectItem>
               <SelectItem value="pagado">Pagado</SelectItem>
               <SelectItem value="abonado">Abonado</SelectItem>
               <SelectItem value="sin pago">Sin Pago</SelectItem>
@@ -238,7 +238,7 @@ const MisPagos: React.FC = () => {
                     const matchesCliente = clienteFiltro.trim() === ""
                       ? true
                       : (pedido.cliente_nombre || "").toLowerCase().includes(clienteFiltro.trim().toLowerCase());
-                    const matchesEstado = estadoFiltro === ""
+                    const matchesEstado = estadoFiltro === "all" || estadoFiltro === ""
                       ? true
                       : pedido.pago === estadoFiltro;
                     return matchesCliente && matchesEstado;
