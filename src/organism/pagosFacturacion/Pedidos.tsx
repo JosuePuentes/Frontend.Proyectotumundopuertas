@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react"; // Added useEffect
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import {
   Table,
@@ -12,19 +12,35 @@ import { Loader2, AlertCircle } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { getApiUrl } from "@/lib/api";
 import { Button } from "@/components/ui/button";
+import { // Added these imports
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
+import { // Added these imports
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+
 // Componente para gestionar pagos y abonos
 const PagoManager: React.FC<{
-  pedidoId: string;
-  pagoInicial?: string;
+  pedido: Pedido; // Changed from pedidoId and pagoInicial
   onSuccess?: () => void;
-}> = ({ pedidoId, pagoInicial, onSuccess }) => {
+}> = ({ pedido, onSuccess }) => {
+  const { _id: pedidoId, pago: pagoInicial, historial_pagos, items } = pedido; // Destructure pedido
   const [monto, setMonto] = useState("");
   const [estado, setEstado] = useState(pagoInicial || "sin pago");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  // Actualizar solo el estado del pago
+  // Actualizar solo el estado del pago (manual change)
   const actualizarEstado = async (nuevoEstado: string) => {
     setLoading(true);
     setError(null);
@@ -53,14 +69,31 @@ const PagoManager: React.FC<{
     setSuccess(null);
     try {
       const apiUrl = getApiUrl();
+      const abonoMonto = parseFloat(monto);
+
+      // Calculate current total paid
+      const currentTotalPaid = (historial_pagos || []).reduce((acc, p) => acc + (p.monto || 0), 0);
+      const newTotalPaid = currentTotalPaid + abonoMonto;
+
+      // Calculate total order amount
+      const totalOrderAmount = (items || []).reduce((acc, item) => acc + (item.precio || 0) * (item.cantidad || 0), 0);
+
+      let newEstado = "sin pago";
+      if (newTotalPaid > 0 && newTotalPaid < totalOrderAmount) {
+        newEstado = "abonado";
+      } else if (newTotalPaid >= totalOrderAmount) {
+        newEstado = "pagado";
+      }
+
       const res = await fetch(`${apiUrl}/pedidos/${pedidoId}/pago`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pago: estado, monto: parseFloat(monto) }),
+        body: JSON.stringify({ pago: newEstado, monto: abonoMonto }), // Send newEstado
       });
       if (!res.ok) throw new Error("Error al registrar abono");
       setSuccess("Abono registrado");
       setMonto("");
+      setEstado(newEstado); // Update local state
       if (onSuccess) onSuccess();
     } catch (err: any) {
       setError(err.message || "Error desconocido");
@@ -94,7 +127,7 @@ const PagoManager: React.FC<{
           size="sm"
           className="text-xs px-2 py-1"
           onClick={registrarAbono}
-          disabled={loading || !monto || isNaN(Number(monto))}
+          disabled={loading || !monto || isNaN(Number(monto)) || parseFloat(monto) <= 0} // Added abonoMonto check
         >
           Abonar
         </Button>
@@ -109,12 +142,16 @@ interface PedidoItem {
   id: string;
   precio: number;
   cantidad: number;
+  codigo?: string; // Added for invoice
+  nombre?: string; // Added for invoice
+  descripcion?: string; // Added for invoice
 }
 
 interface RegistroPago {
   monto: number;
   fecha: string;
   metodo?: string;
+  estado?: string; // Added for invoice
 }
 
 interface Pedido {
@@ -125,6 +162,16 @@ interface Pedido {
   pago?: string; // "sin pago" | "abonado" | "pagado"
   items?: PedidoItem[];
   historial_pagos?: RegistroPago[];
+  cliente_id?: string; // Added for invoice
+  total_abonado?: number; // Added for invoice
+}
+
+interface CompanyDetails { // Added for invoice
+  nombre: string;
+  rif: string;
+  direccion: string;
+  telefono: string;
+  email: string;
 }
 
 const ESTADOS = [
@@ -148,6 +195,13 @@ const Pedidos: React.FC = () => {
 
   // Filtro local por cliente
   const [clienteFiltro, setClienteFiltro] = useState<string>("");
+  // Nuevo estado para el filtro de estado de pago
+  const [estadoFiltro, setEstadoFiltro] = useState<string>("todos"); // Added for filtering
+
+  // State for invoice modal
+  const [showInvoiceModal, setShowInvoiceModal] = useState(false); // Added for invoice modal
+  const [selectedPedidoForInvoice, setSelectedPedidoForInvoice] = useState<Pedido | null>(null); // Added for invoice modal
+  const [companyDetails, setCompanyDetails] = useState<CompanyDetails | null>(null); // Added for invoice modal
 
   const fetchPedidos = async () => {
     setLoading(true);
@@ -174,6 +228,49 @@ const Pedidos: React.FC = () => {
     }
   };
 
+  // Fetch company details for invoice
+  const fetchCompanyDetails = async () => { // Added for invoice
+    try {
+      const res = await fetch(`${getApiUrl()}/pedidos/company-details`);
+      if (!res.ok) throw new Error("Error al obtener detalles de la empresa");
+      const data = await res.json();
+      setCompanyDetails(data);
+    } catch (err: any) {
+      console.error("Error fetching company details:", err);
+    }
+  };
+
+  useEffect(() => { // Modified useEffect
+    fetchPedidos();
+    fetchCompanyDetails(); // Added fetchCompanyDetails
+  }, []);
+
+  // Handle "Ver Preliminar" click
+  const handleViewPreliminarClick = (pedido: Pedido) => { // Added for invoice modal
+    setSelectedPedidoForInvoice(pedido);
+    setShowInvoiceModal(true);
+  };
+
+  // Handle print
+  const handlePrint = () => { // Added for invoice modal
+    const printContent = document.getElementById("invoice-print-section");
+    if (printContent) {
+      const originalContents = document.body.innerHTML;
+      const printContents = printContent.innerHTML;
+
+      document.body.innerHTML = printContents;
+      window.print();
+      document.body.innerHTML = originalContents;
+      window.location.reload(); // Reload to restore original page content and functionality
+    } else {
+      console.error("Could not find print section");
+    }
+  };
+
+  // Calculate total pedido amount
+  const calculateTotalPedido = (pedido: Pedido) => { // Added for invoice modal
+    return (pedido.items || []).reduce((sum, item) => sum + ((item.precio || 0) * (item.cantidad || 0)), 0);
+  };
 
   // Calcular suma de pagos realizados usando historial_pagos
   const sumaPagos = pedidos.reduce((acc, pedido) => {
@@ -230,6 +327,21 @@ const Pedidos: React.FC = () => {
               className="text-xs sm:text-base"
             />
           </div>
+          {/* Nuevo Select para filtrar por estado de pago */} {/* Added for filtering */}
+          <div className="flex flex-col w-full sm:w-auto">
+            <label className="text-xs sm:text-sm text-gray-600 mb-1">Estado de Pago</label>
+            <Select value={estadoFiltro} onValueChange={setEstadoFiltro}>
+              <SelectTrigger className="w-full text-xs sm:text-base">
+                <SelectValue placeholder="Filtrar por estado" />
+              </SelectTrigger>
+              <SelectContent className="bg-white">
+                <SelectItem value="todos">Todos los estados</SelectItem>
+                <SelectItem value="pagado">Pagado</SelectItem>
+                <SelectItem value="abonado">Abonado</SelectItem>
+                <SelectItem value="sin pago">Sin Pago</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
           <div className="flex items-end w-full sm:w-auto">
             <Button onClick={fetchPedidos} className="w-full sm:w-auto text-xs sm:text-base">Filtrar</Button>
           </div>
@@ -261,21 +373,30 @@ const Pedidos: React.FC = () => {
                   <TableHead className="w-24 sm:w-1/4">Fecha</TableHead>
                   <TableHead className="w-24 sm:w-1/4">Pago</TableHead>
                   <TableHead className="w-24 sm:w-1/4">Total</TableHead>
+                  <TableHead className="w-24 sm:w-1/4">Acciones</TableHead> {/* Added for "Ver Preliminar" button */}
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {pedidos
-                  .filter((pedido) =>
-                    clienteFiltro.trim() === ""
+                  .filter((pedido) => { // Modified filter logic
+                    const matchesCliente = clienteFiltro.trim() === ""
                       ? true
-                      : (pedido.cliente_nombre || "").toLowerCase().includes(clienteFiltro.trim().toLowerCase())
-                  )
+                      : (pedido.cliente_nombre || "").toLowerCase().includes(clienteFiltro.trim().toLowerCase());
+
+                    const matchesEstadoPago = estadoFiltro === "todos"
+                      ? true
+                      : pedido.pago === estadoFiltro;
+
+                    return matchesCliente && matchesEstadoPago;
+                  })
                   .map((pedido) => {
                   // Calcular el total del pedido
                   const total = (pedido.items || []).reduce(
                     (acc, item) => acc + (item.precio || 0) * (item.cantidad || 0),
                     0
                   );
+                  const montoAbonado = (pedido.historial_pagos || []).reduce((a, pago) => a + (pago.monto || 0), 0); // Added for invoice modal
+
                   return (
                     <TableRow key={pedido._id} className="hover:bg-gray-50">
                       <TableCell className="font-medium break-all max-w-[120px]">
@@ -295,8 +416,7 @@ const Pedidos: React.FC = () => {
                       <TableCell>
                         <div className="flex flex-col gap-1">
                           <PagoManager
-                            pedidoId={pedido._id}
-                            pagoInicial={pedido.pago}
+                            pedido={pedido} // Pass the entire pedido object
                             onSuccess={fetchPedidos}
                           />
                         </div>
@@ -305,11 +425,21 @@ const Pedidos: React.FC = () => {
                         <div className="flex flex-col gap-1">
                           {pedido.historial_pagos && pedido.historial_pagos.length > 0 && (
                             <span className="text-xs text-green-700 font-semibold">
-                              Pagos: {pedido.historial_pagos.reduce((a, pago) => a + (pago.monto || 0), 0).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}
+                              Pagos: {montoAbonado.toLocaleString("es-MX", { style: "currency", currency: "MXN" })}
                             </span>
                           )}
                         {total.toLocaleString("es-MX", { style: "currency", currency: "MXN" })}
                         </div>
+                      </TableCell>
+                      <TableCell> {/* Added for "Ver Preliminar" button */}
+                        <Button
+                          onClick={() => handleViewPreliminarClick(pedido)}
+                          size="sm"
+                          variant="outline"
+                          className="bg-blue-500 hover:bg-blue-600 text-white"
+                        >
+                          Ver Preliminar
+                        </Button>
                       </TableCell>
                     </TableRow>
                   );
@@ -318,6 +448,99 @@ const Pedidos: React.FC = () => {
             </Table>
           </div>
         )}
+
+        {/* Invoice Modal */} {/* Added for invoice modal */}
+        <Dialog open={showInvoiceModal} onOpenChange={setShowInvoiceModal}>
+          <DialogContent className="sm:max-w-[600px] p-6 mx-auto">
+            <DialogHeader>
+              <DialogTitle className="text-2xl font-bold text-center">
+                {selectedPedidoForInvoice?.pago === "pagado" ? "Nota de Entrega" : "Comprobante de Abono"}
+              </DialogTitle>
+              <DialogDescription className="text-center">
+                Detalle de la transacción y el pedido.
+              </DialogDescription>
+            </DialogHeader>
+            {selectedPedidoForInvoice && companyDetails && (
+              <div id="invoice-print-section" className="mt-4 space-y-4 text-sm p-4 border rounded-md bg-white">
+                {/* Company Details */}
+                <div className="border-b pb-2 mb-4 text-center">
+                  <p className="font-bold text-xl text-gray-800">{companyDetails.nombre}</p>
+                  <p className="text-gray-600">RIF: {companyDetails.rif}</p>
+                  <p className="text-gray-600">Dirección: {companyDetails.direccion}</p>
+                  <p className="text-gray-600">Teléfono: {companyDetails.telefono}</p>
+                  <p className="text-gray-600">Email: {companyDetails.email}</p>
+                </div>
+
+                {/* Client Details */}
+                <div className="border-b pb-2 mb-4">
+                  <p className="font-bold text-base text-gray-700">Cliente: {selectedPedidoForInvoice.cliente_nombre}</p>
+                  {/* Add more client details if available in pedido object */}
+                </div>
+
+                {/* Items */}
+                <div className="mb-4">
+                  <p className="font-bold mb-2 text-base text-gray-700">Items del Pedido:</p>
+                  <Table className="w-full">
+                    <TableHeader>
+                      <TableRow className="bg-gray-100">
+                        <TableHead className="py-2 px-4 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Código</TableHead>
+                        <TableHead className="py-2 px-4 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Descripción</TableHead>
+                        <TableHead className="py-2 px-4 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Cantidad</TableHead>
+                        <TableHead className="py-2 px-4 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Precio Unitario</TableHead>
+                        <TableHead className="py-2 px-4 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Total Item</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {selectedPedidoForInvoice.items?.map((item, idx) => (
+                        <TableRow key={idx} className="border-b hover:bg-gray-50">
+                          <TableCell className="py-2 px-4 whitespace-nowrap">{item.codigo}</TableCell>
+                          <TableCell className="py-2 px-4">{item.nombre} - {item.descripcion}</TableCell>
+                          <TableCell className="py-2 px-4 whitespace-nowrap text-center">{(item.cantidad || 0)}</TableCell>
+                          <TableCell className="py-2 px-4 whitespace-nowrap text-right">{(item.precio || 0).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}</TableCell>
+                          <TableCell className="py-2 px-4 whitespace-nowrap text-right">{((item.precio || 0) * (item.cantidad || 0)).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+
+                {/* Abonos */}
+                <div className="mb-4">
+                  <p className="font-bold mb-2 text-base text-gray-700">Historial de Abonos:</p>
+                  <Table className="w-full">
+                    <TableHeader>
+                      <TableRow className="bg-gray-100">
+                        <TableHead className="py-2 px-4 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Fecha</TableHead>
+                        <TableHead className="py-2 px-4 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Monto Abonado</TableHead>
+                        <TableHead className="py-2 px-4 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Estado</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {selectedPedidoForInvoice.historial_pagos?.map((pago, idx) => (
+                        <TableRow key={idx} className="border-b hover:bg-gray-50">
+                          <TableCell className="py-2 px-4 whitespace-nowrap">{new Date(pago.fecha).toLocaleDateString()}</TableCell>
+                          <TableCell className="py-2 px-4 whitespace-nowrap text-right">{(pago.monto || 0).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}</TableCell>
+                          <TableCell className="py-2 px-4 whitespace-nowrap">{pago.estado}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+
+                {/* Totals */}
+                <div className="text-right font-bold text-lg mt-6 p-4 bg-gray-50 rounded-md">
+                  <p className="text-gray-800">Total Pedido: <span className="text-blue-600">{(calculateTotalPedido(selectedPedidoForInvoice) || 0).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}</span></p>
+                  <p className="text-gray-800">Total Abonado: <span className="text-green-600">{(montoAbonado || 0).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}</span></p>
+                  <p className="text-gray-800">Monto Pendiente: <span className="text-red-600">{((calculateTotalPedido(selectedPedidoForInvoice) || 0) - (montoAbonado || 0)).toLocaleString("es-MX", { style: "currency", currency: "MXN" })}</span></p>
+                </div>
+              </div>
+            )}
+            <DialogFooter className="mt-6 flex justify-between">
+              <Button onClick={() => setShowInvoiceModal(false)} variant="outline">Cerrar</Button>
+              <Button onClick={handlePrint} className="bg-green-500 hover:bg-green-600 text-white">Imprimir</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </CardContent>
     </Card>
   );
