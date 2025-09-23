@@ -1,0 +1,775 @@
+{
+  "items": [
+    {
+      "id": "1",
+      "nombre": "Puerta de madera clásica",
+      "descripcion": "Puerta de madera maciza con acabado natural.",
+      "tipo": "puerta",
+      "material": "madera",
+      "precio": 2500
+    },
+    {
+      "id": "2",
+      "nombre": "Ventana corrediza de aluminio",
+      "descripcion": "Ventana de aluminio con vidrio templado.",
+      "tipo": "ventana",
+      "material": "aluminio",
+      "precio": 1800
+    },
+    {
+      "id": "3",
+      "nombre": "Puerta metálica reforzada",
+      "descripcion": "Puerta de metal para máxima seguridad.",
+      "tipo": "puerta",
+      "material": "metal",
+      "precio": 3200
+    }
+  ],
+  "clientes": [
+    {
+      "id": "V30780142",
+      "nombre": "Juan Pérez",
+      "direccion": "Calle Falsa 123, Ciudad",
+      "telefono": "555-1234",
+      "email": "juan.perez@email.com"
+    },
+    {
+      "id": "v18008444",
+      "nombre": "María López",
+      "direccion": "Av. Principal 456, Ciudad",
+      "telefono": "555-5678",
+      "email": "maria.lopez@email.com"
+    }
+  ],
+  "pedidos": [
+    {
+      "id": "d606",
+      "cliente_id": "V30780142",
+      "fecha_creacion": "2025-08-19T15:21:11.240Z",
+      "fecha_actualizacion": "2025-08-19T15:21:11.240Z",
+      "estado_general": "orden1",
+      "items": [
+        {
+          "producto_id": 1,
+          "descripcion": "Puerta de madera clásica",
+          "cantidad": 1,
+          "precio_unitario": {
+            "$numberDecimal": "2500.00"
+          },
+          "costo_unitario": {
+            "$numberDecimal": "1325.00"
+          },
+          "subtotal": {
+            "$numberDecimal": "2500.00"
+          }
+        }
+      ],
+      "seguimiento": [
+        {
+          "orden": 1,
+          "nombre_subestado": "Herreria / soldadura",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": "2025-08-19T15:21:11.240Z",
+          "fecha_fin": "2025-08-19T15:21:11.240Z",
+          "notas": ""
+        },
+        {
+          "orden": 2,
+          "nombre_subestado": "Masillar / Pintura",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        },
+        {
+          "orden": 3,
+          "nombre_subestado": "Preparacion / Verificacion",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        },
+        {
+          "orden": 4,
+          "nombre_subestado": "Facturacion",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        },
+        {
+          "orden": 5,
+          "nombre_subestado": "sin definir 1",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        },
+        {
+          "orden": 6,
+          "nombre_subestado": "sin definir 2",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        }
+      ]
+    },
+    {
+      "id": "6787",
+      "cliente_id": "V30780142",
+      "fecha_creacion": "2025-08-19T15:21:35.234Z",
+      "fecha_actualizacion": "2025-08-19T15:21:35.234Z",
+      "estado_general": "orden1",
+      "items": [
+        {
+          "producto_id": 1,
+          "descripcion": "Puerta de madera clásica",
+          "cantidad": 1,
+          "precio_unitario": {
+            "$numberDecimal": "2500.00"
+          },
+          "costo_unitario": {
+            "$numberDecimal": "1325.00"
+          },
+          "subtotal": {
+            "$numberDecimal": "2500.00"
+          }
+        }
+      ],
+      "seguimiento": [
+        {
+          "orden": 1,
+          "nombre_subestado": "Herreria / soldadura",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": "2025-08-19T15:21:35.234Z",
+          "fecha_fin": "2025-08-19T15:21:35.234Z",
+          "notas": ""
+        },
+        {
+          "orden": 2,
+          "nombre_subestado": "Masillar / Pintura",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        },
+        {
+          "orden": 3,
+          "nombre_subestado": "Preparacion / Verificacion",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        },
+        {
+          "orden": 4,
+          "nombre_subestado": "Facturacion",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        },
+        {
+          "orden": 5,
+          "nombre_subestado": "sin definir 1",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        },
+        {
+          "orden": 6,
+          "nombre_subestado": "sin definir 2",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        }
+      ]
+    },
+    {
+      "id": "1f12",
+      "cliente_id": "V30780142",
+      "fecha_creacion": "2025-08-19T15:24:59.360Z",
+      "fecha_actualizacion": "2025-08-19T15:24:59.360Z",
+      "estado_general": "orden1",
+      "items": [
+        {
+          "producto_id": 1,
+          "descripcion": "Puerta de madera clásica",
+          "cantidad": 1,
+          "precio_unitario": {
+            "$numberDecimal": "2500.00"
+          },
+          "costo_unitario": {
+            "$numberDecimal": "1325.00"
+          },
+          "subtotal": {
+            "$numberDecimal": "2500.00"
+          }
+        }
+      ],
+      "seguimiento": [
+        {
+          "orden": 1,
+          "nombre_subestado": "Herreria / soldadura",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": "2025-08-19T15:24:59.360Z",
+          "fecha_fin": "2025-08-19T15:24:59.360Z",
+          "notas": ""
+        },
+        {
+          "orden": 2,
+          "nombre_subestado": "Masillar / Pintura",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        },
+        {
+          "orden": 3,
+          "nombre_subestado": "Preparacion / Verificacion",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        },
+        {
+          "orden": 4,
+          "nombre_subestado": "Facturacion",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        },
+        {
+          "orden": 5,
+          "nombre_subestado": "sin definir 1",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        },
+        {
+          "orden": 6,
+          "nombre_subestado": "sin definir 2",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        }
+      ]
+    },
+    {
+      "id": "66d4",
+      "cliente_id": "v18008444",
+      "fecha_creacion": "2025-08-19T15:25:50.368Z",
+      "fecha_actualizacion": "2025-08-19T15:25:50.368Z",
+      "estado_general": "orden1",
+      "items": [
+        {
+          "producto_id": 3,
+          "descripcion": "Puerta metálica reforzada",
+          "cantidad": 1,
+          "precio_unitario": {
+            "$numberDecimal": "3200.00"
+          },
+          "costo_unitario": {
+            "$numberDecimal": "1696.00"
+          },
+          "subtotal": {
+            "$numberDecimal": "3200.00"
+          }
+        }
+      ],
+      "seguimiento": [
+        {
+          "orden": 1,
+          "nombre_subestado": "Herreria / soldadura",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": "2025-08-19T15:25:50.368Z",
+          "fecha_fin": "2025-08-19T15:25:50.368Z",
+          "notas": ""
+        },
+        {
+          "orden": 2,
+          "nombre_subestado": "Masillar / Pintura",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        },
+        {
+          "orden": 3,
+          "nombre_subestado": "Preparacion / Verificacion",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        },
+        {
+          "orden": 4,
+          "nombre_subestado": "Facturacion",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        },
+        {
+          "orden": 5,
+          "nombre_subestado": "sin definir 1",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        },
+        {
+          "orden": 6,
+          "nombre_subestado": "sin definir 2",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        }
+      ]
+    },
+    {
+      "id": "6858",
+      "cliente_id": "V30780142",
+      "fecha_creacion": "2025-08-19T15:26:49.504Z",
+      "fecha_actualizacion": "2025-08-19T15:26:49.504Z",
+      "estado_general": "orden1",
+      "items": [
+        {
+          "producto_id": 1,
+          "descripcion": "Puerta de madera clásica",
+          "cantidad": 1,
+          "precio_unitario": {
+            "$numberDecimal": "2500.00"
+          },
+          "costo_unitario": {
+            "$numberDecimal": "1325.00"
+          },
+          "subtotal": {
+            "$numberDecimal": "2500.00"
+          }
+        }
+      ],
+      "seguimiento": [
+        {
+          "orden": 1,
+          "nombre_subestado": "Herreria / soldadura",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": "2025-08-19T15:26:49.504Z",
+          "fecha_fin": "2025-08-19T15:26:49.504Z",
+          "notas": ""
+        },
+        {
+          "orden": 2,
+          "nombre_subestado": "Masillar / Pintura",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        },
+        {
+          "orden": 3,
+          "nombre_subestado": "Preparacion / Verificacion",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        },
+        {
+          "orden": 4,
+          "nombre_subestado": "Facturacion",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        },
+        {
+          "orden": 5,
+          "nombre_subestado": "sin definir 1",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        },
+        {
+          "orden": 6,
+          "nombre_subestado": "sin definir 2",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        }
+      ]
+    },
+    {
+      "id": "da29",
+      "cliente_id": "V30780142",
+      "fecha_creacion": "2025-08-19T16:00:42.410Z",
+      "fecha_actualizacion": "2025-08-19T16:00:42.410Z",
+      "estado_general": "orden1",
+      "items": [
+        {
+          "producto_id": 1,
+          "descripcion": "Puerta de madera clásica",
+          "cantidad": 1,
+          "precio_unitario": {
+            "$numberDecimal": "2500.00"
+          },
+          "costo_unitario": {
+            "$numberDecimal": "1325.00"
+          },
+          "subtotal": {
+            "$numberDecimal": "2500.00"
+          }
+        }
+      ],
+      "seguimiento": [
+        {
+          "orden": 1,
+          "nombre_subestado": "Herreria / soldadura",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": "2025-08-19T16:00:42.410Z",
+          "fecha_fin": "2025-08-19T16:00:42.410Z",
+          "notas": ""
+        },
+        {
+          "orden": 2,
+          "nombre_subestado": "Masillar / Pintura",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        },
+        {
+          "orden": 3,
+          "nombre_subestado": "Preparacion / Verificacion",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        },
+        {
+          "orden": 4,
+          "nombre_subestado": "Facturacion",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        },
+        {
+          "orden": 5,
+          "nombre_subestado": "sin definir 1",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        },
+        {
+          "orden": 6,
+          "nombre_subestado": "sin definir 2",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        }
+      ]
+    },
+    {
+      "id": "3c01",
+      "cliente_id": "V30780142",
+      "fecha_creacion": "2025-08-19T16:29:33.428Z",
+      "fecha_actualizacion": "2025-08-19T16:29:33.428Z",
+      "estado_general": "orden1",
+      "items": [
+        {
+          "producto_id": 2,
+          "descripcion": "Ventana corrediza de aluminio",
+          "cantidad": 1,
+          "precio_unitario": {
+            "$numberDecimal": "1800.00"
+          },
+          "costo_unitario": {
+            "$numberDecimal": "954.00"
+          },
+          "subtotal": {
+            "$numberDecimal": "1800.00"
+          }
+        }
+      ],
+      "seguimiento": [
+        {
+          "orden": 1,
+          "nombre_subestado": "Herreria / soldadura",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": "2025-08-19T16:29:33.428Z",
+          "fecha_fin": "2025-08-19T16:29:33.428Z",
+          "notas": ""
+        },
+        {
+          "orden": 2,
+          "nombre_subestado": "Masillar / Pintura",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        },
+        {
+          "orden": 3,
+          "nombre_subestado": "Preparacion / Verificacion",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        },
+        {
+          "orden": 4,
+          "nombre_subestado": "Facturacion",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        },
+        {
+          "orden": 5,
+          "nombre_subestado": "sin definir 1",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        },
+        {
+          "orden": 6,
+          "nombre_subestado": "sin definir 2",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        }
+      ]
+    },
+    {
+      "id": "d633",
+      "cliente_id": "V30780142",
+      "fecha_creacion": "2025-08-19T19:12:39.205Z",
+      "fecha_actualizacion": "2025-08-19T19:12:39.205Z",
+      "estado_general": "orden1",
+      "items": [
+        {
+          "producto_id": 1,
+          "descripcion": "Puerta de madera clásica",
+          "cantidad": 1,
+          "precio_unitario": {
+            "$numberDecimal": "2500.00"
+          },
+          "costo_unitario": {
+            "$numberDecimal": "1325.00"
+          }
+        }
+      ],
+      "seguimiento": [
+        {
+          "orden": 1,
+          "nombre_subestado": "Herreria / soldadura",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        },
+        {
+          "orden": 2,
+          "nombre_subestado": "Masillar / Pintura",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        },
+        {
+          "orden": 3,
+          "nombre_subestado": "Preparacion / Verificacion",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        },
+        {
+          "orden": 4,
+          "nombre_subestado": "Facturacion",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        },
+        {
+          "orden": 5,
+          "nombre_subestado": "sin definir 1",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        },
+        {
+          "orden": 6,
+          "nombre_subestado": "sin definir 2",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        }
+      ]
+    },
+    {
+      "id": "6815",
+      "cliente_id": "V30780142",
+      "fecha_creacion": "2025-08-20T00:10:57.351Z",
+      "fecha_actualizacion": "2025-08-20T00:10:57.351Z",
+      "estado_general": "orden1",
+      "items": [
+        {
+          "producto_id": 1,
+          "descripcion": "Puerta de madera clásica",
+          "cantidad": 1,
+          "precio_unitario": {
+            "$numberDecimal": "2500.00"
+          },
+          "costo_unitario": {
+            "$numberDecimal": "1325.00"
+          }
+        }
+      ],
+      "seguimiento": [
+        {
+          "orden": 1,
+          "nombre_subestado": "Herreria / soldadura",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        },
+        {
+          "orden": 2,
+          "nombre_subestado": "Masillar / Pintura",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        },
+        {
+          "orden": 3,
+          "nombre_subestado": "Preparacion / Verificacion",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        },
+        {
+          "orden": 4,
+          "nombre_subestado": "Facturacion",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        },
+        {
+          "orden": 5,
+          "nombre_subestado": "sin definir 1",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        },
+        {
+          "orden": 6,
+          "nombre_subestado": "sin definir 2",
+          "estado": "pendiente",
+          "asignado_a": null,
+          "fecha_inicio": null,
+          "fecha_fin": null,
+          "notas": ""
+        }
+      ]
+    }
+  ],
+  "empleados": [
+    {
+      "id": "admin01",
+      "nombreCompleto": "Usuario Administrador Ejemplo",
+      "permisos": [
+        "admin",
+        "ventas",
+        "fabricacion",
+        "envios",
+        "facturacion"
+      ]
+    },
+    {
+      "id": "V30780142",
+      "nombreCompleto": "STALIN CARRUYO",
+      "permisos": [
+        "ventas",
+        "admin",
+        "facturacion",
+        "fabricacion",
+        "envios"
+      ]
+    }
+  ]
+}
