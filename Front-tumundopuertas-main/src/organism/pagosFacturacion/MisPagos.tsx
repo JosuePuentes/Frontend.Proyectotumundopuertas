@@ -241,7 +241,15 @@ const MisPagos: React.FC = () => {
                     const matchesEstado = estadoFiltro === "all" || estadoFiltro === ""
                       ? true
                       : pedido.pago === estadoFiltro;
-                    return matchesCliente && matchesEstado;
+
+                    const pedidoDate = new Date(pedido.historial_pagos?.[0]?.fecha || '');
+                    const startFilterDate = fechaInicio ? new Date(fechaInicio) : null;
+                    const endFilterDate = fechaFin ? new Date(fechaFin) : null;
+
+                    const matchesFecha = (!startFilterDate || pedidoDate >= startFilterDate) &&
+                                         (!endFilterDate || pedidoDate <= endFilterDate);
+
+                    return matchesCliente && matchesEstado && matchesFecha;
                   })
                   .map((pedido) => {
                   const totalPedido = calculateTotalPedido(pedido);
