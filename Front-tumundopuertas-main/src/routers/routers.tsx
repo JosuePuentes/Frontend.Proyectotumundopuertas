@@ -23,7 +23,7 @@ import TerminarAsignacion from "@/organism/teminarasignacion/TerminarAsignacion"
 import MonitorPedidos from "@/organism/monitorped/MonitorPedidos";
 import  Pedidos  from "@/organism/pagosFacturacion/Pedidos";
 import MisPagos from "@/organism/pagosFacturacion/MisPagos";
-import ResumenVentaDiaria from "@/organism/ResumenVentaDiaria/ResumenVentaDiaria";
+import ResumenVentaDiaria from "@/organism/ResumenVentaDiaria/ResumenVentaDiaria.tsx";
 function AppRouter() {
   // Función para verificar token y permisos
   const getPermisos = (): string[] => {
