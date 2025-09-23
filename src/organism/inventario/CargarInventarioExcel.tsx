@@ -185,12 +185,15 @@ const CargarInventarioExcel: React.FC = () => {
   };
 
   const handleExportExcel = () => {
+    console.log('handleExportExcel called');
     if (!currentInventory || currentInventory.length === 0) {
       setMensaje('No hay inventario para exportar a Excel.');
+      console.log('No inventory to export.');
       return;
     }
 
     setMensaje('Exportando a Excel...');
+    console.log('Current inventory data:', currentInventory);
     try {
       const ws = XLSX.utils.json_to_sheet(currentInventory.map(item => ({
         Código: item.codigo,
@@ -209,6 +212,7 @@ const CargarInventarioExcel: React.FC = () => {
       XLSX.utils.book_append_sheet(wb, ws, 'Inventario');
       XLSX.writeFile(wb, 'inventario.xlsx');
       setMensaje('Inventario exportado a inventario.xlsx');
+      console.log('Excel file generated successfully.');
     } catch (error) {
       console.error('Error exporting to Excel:', error);
       setMensaje('Error al exportar a Excel.');
