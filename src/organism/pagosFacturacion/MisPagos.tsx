@@ -14,6 +14,7 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getApiUrl } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Loader2, AlertCircle } from "lucide-react";
@@ -57,6 +58,7 @@ const MisPagos: React.FC = () => {
   const [fechaInicio, setFechaInicio] = useState("");
   const [fechaFin, setFechaFin] = useState("");
   const [clienteFiltro, setClienteFiltro] = useState<string>(""); // Added state for client filter
+  const [estadoFiltro, setEstadoFiltro] = useState<string>("todos"); // Nuevo estado para el filtro de estado
   const [showInvoiceModal, setShowInvoiceModal] = useState(false);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false); // New state for confirmation
   const [selectedPedidoForInvoice, setSelectedPedidoForInvoice] = useState<PedidoConPagos | null>(null);
@@ -178,6 +180,18 @@ const MisPagos: React.FC = () => {
             className="sm:w-1/3"
             placeholder="Buscar por nombre de cliente..."
           />
+          {/* Nuevo Select para filtrar por estado */}
+          <Select value={estadoFiltro} onValueChange={setEstadoFiltro}>
+            <SelectTrigger className="sm:w-1/3">
+              <SelectValue placeholder="Filtrar por estado" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="todos">Todos los estados</SelectItem>
+              <SelectItem value="pagado">Pagado</SelectItem>
+              <SelectItem value="abonado">Abonado</SelectItem>
+              <SelectItem value="pendiente">Pendiente</SelectItem>
+            </SelectContent>
+          </Select>
           <Button onClick={fetchPagos} className="sm:w-auto w-full">
             Buscar
           </Button>
@@ -215,11 +229,17 @@ const MisPagos: React.FC = () => {
               </TableHeader>
               <TableBody>
                 {pagos
-                  .filter((pedido) =>
-                    clienteFiltro.trim() === ""
+                  .filter((pedido) => {
+                    const matchesCliente = clienteFiltro.trim() === ""
                       ? true
-                      : (pedido.cliente_nombre || "").toLowerCase().includes(clienteFiltro.trim().toLowerCase())
-                  )
+                      : (pedido.cliente_nombre || "").toLowerCase().includes(clienteFiltro.trim().toLowerCase());
+
+                    const matchesEstado = estadoFiltro === "todos"
+                      ? true
+                      : pedido.pago === estadoFiltro;
+
+                    return matchesCliente && matchesEstado;
+                  })
                   .map((pedido) => {
                   const totalPedido = calculateTotalPedido(pedido);
                   const montoAbonado = pedido.total_abonado || 0;
@@ -259,7 +279,7 @@ const MisPagos: React.FC = () => {
                             onClick={() => handleViewPreliminarClick(pedido)}
                             size="sm"
                             variant="outline"
-                            className="bg-gray-500 hover:bg-gray-600 text-white"
+                            className="bg-purple-500 hover:bg-purple-600 text-white"
                           >
                             Ver Preliminar
                           </Button>
