@@ -23,6 +23,7 @@ import TerminarAsignacion from "@/organism/teminarasignacion/TerminarAsignacion"
 import MonitorPedidos from "@/organism/monitorped/MonitorPedidos";
 import  Pedidos  from "@/organism/pagosFacturacion/Pedidos";
 import MisPagos from "@/organism/pagosFacturacion/MisPagos";
+import ResumenVentaDiaria from "@/organism/ResumenVentaDiaria/ResumenVentaDiaria";
 function AppRouter() {
   // Función para verificar token y permisos
   const getPermisos = (): string[] => {
@@ -81,6 +82,14 @@ function AppRouter() {
           element={
             <ProtectedRoute permiso="pagos">
               <MisPagos />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="resumen-diario"
+          element={
+            <ProtectedRoute permiso="admin"> {/* Assuming 'admin' permission for now */}
+              <ResumenVentaDiaria />
             </ProtectedRoute>
           }
         />
