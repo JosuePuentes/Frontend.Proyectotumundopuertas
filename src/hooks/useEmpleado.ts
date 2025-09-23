@@ -6,24 +6,16 @@ type FetchOptions = {
   headers?: Record<string, string>;
 };
 
-export function useItems() {
-  const [data, setData] = useState<any>(null);
+export function useEmpleado() {
+  const [dataEmpleados, setDataEmpleados] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchItems = async (endpoint: string, options?: FetchOptions) => {
+  const fetchEmpleado = async (endpoint: string, options?: FetchOptions) => {
     setLoading(true);
     setError(null);
     try {
-      let secureEndpoint = endpoint;
-      if (secureEndpoint.startsWith('http://')) {
-        secureEndpoint = secureEndpoint.replace('http://', 'https://');
-      } else if (!secureEndpoint.startsWith('https://')) {
-        secureEndpoint = `https://${secureEndpoint}`;
-      }
-      console.log("🔍 ITEMS - URL original:", endpoint );
-console.log("🔍 ITEMS - URL final:", secureEndpoint);
-      const res = await fetch(secureEndpoint, {
+      const res = await fetch(endpoint, {
         method: options?.method || "GET",
         headers: {
           "Content-Type": "application/json",
@@ -33,7 +25,8 @@ console.log("🔍 ITEMS - URL final:", secureEndpoint);
       });
       if (!res.ok) throw new Error("Error en la petición");
       const result = await res.json();
-      setData(result);
+      console.log("Empleados obtenidos:", result);
+      setDataEmpleados(result);
     } catch (err: any) {
       setError(err.message || "Error desconocido");
     } finally {
@@ -41,5 +34,5 @@ console.log("🔍 ITEMS - URL final:", secureEndpoint);
     }
   };
 
-  return { data, loading, error, fetchItems };
+  return { dataEmpleados, loading, error, fetchEmpleado };
 }

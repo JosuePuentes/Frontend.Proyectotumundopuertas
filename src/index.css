@@ -1,0 +1,22 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+/* Oculta las flechas en navegadores como Chrome, Safari, Edge y Opera */
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Oculta las flechas en Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.ocultar-scrollbar {
+  -ms-overflow-style: none; /* IE y Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.ocultar-scrollbar::-webkit-scrollbar {
+  display: none;
+}
