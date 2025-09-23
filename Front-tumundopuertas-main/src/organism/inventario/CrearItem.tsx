@@ -75,7 +75,7 @@ const CrearItem: React.FC = () => {
       return;
     }
     const apiUrl = getApiUrl();
-    await fetchItems(`${apiUrl}/inventario`, {
+    await fetchItems(`${apiUrl}/inventario/`, {
       method: "POST",
       body: {
         codigo: item.codigo,
