@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import * as XLSX from 'xlsx';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
@@ -151,13 +153,66 @@ const CargarInventarioExcel: React.FC = () => {
   };
 
   const handleExportPdf = () => {
-    setMensaje('Exportando a PDF... (funcionalidad no implementada)');
-    // Implement PDF export logic here
+    if (!currentInventory || currentInventory.length === 0) {
+      setMensaje('No hay inventario para exportar a PDF.');
+      return;
+    }
+
+    setMensaje('Exportando a PDF...');
+    try {
+      const doc = new jsPDF();
+      (doc as any).autoTable({
+        head: [['Código', 'Nombre', 'Descripción', 'Categoría', 'Modelo', 'Costo', 'Costo Producción', 'Cantidad', 'Precio', 'Activo']],
+        body: currentInventory.map(item => [
+          item.codigo,
+          item.nombre,
+          item.descripcion,
+          item.categoria,
+          item.modelo,
+          item.costo,
+          item.costoProduccion,
+          item.cantidad,
+          item.precio,
+          item.activo ? 'Sí' : 'No',
+        ]),
+      });
+      doc.save('inventario.pdf');
+      setMensaje('Inventario exportado a inventario.pdf');
+    } catch (error) {
+      console.error('Error exporting to PDF:', error);
+      setMensaje('Error al exportar a PDF.');
+    }
   };
 
   const handleExportExcel = () => {
-    setMensaje('Exportando a Excel... (funcionalidad no implementada)');
-    // Implement Excel export logic here
+    if (!currentInventory || currentInventory.length === 0) {
+      setMensaje('No hay inventario para exportar a Excel.');
+      return;
+    }
+
+    setMensaje('Exportando a Excel...');
+    try {
+      const ws = XLSX.utils.json_to_sheet(currentInventory.map(item => ({
+        Código: item.codigo,
+        Nombre: item.nombre,
+        Descripción: item.descripcion,
+        Categoría: item.categoria,
+        Modelo: item.modelo,
+        Costo: item.costo,
+        'Costo Producción': item.costoProduccion,
+        Cantidad: item.cantidad,
+        Precio: item.precio,
+        Activo: item.activo ? 'Sí' : 'No',
+        Imágenes: item.imagenes.join(', '),
+      })));
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Inventario');
+      XLSX.writeFile(wb, 'inventario.xlsx');
+      setMensaje('Inventario exportado a inventario.xlsx');
+    } catch (error) {
+      console.error('Error exporting to Excel:', error);
+      setMensaje('Error al exportar a Excel.');
+    }
   };
 
   return (
