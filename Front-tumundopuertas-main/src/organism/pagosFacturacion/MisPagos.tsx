@@ -16,6 +16,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { getApiUrl } from "@/lib/api";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 import { Loader2, AlertCircle } from "lucide-react";
 import {
   Dialog,
@@ -57,6 +64,7 @@ const MisPagos: React.FC = () => {
   const [fechaInicio, setFechaInicio] = useState("");
   const [fechaFin, setFechaFin] = useState("");
   const [clienteFiltro, setClienteFiltro] = useState<string>(""); // Added state for client filter
+  const [estadoFiltro, setEstadoFiltro] = useState<string>(""); // New state for payment status filter
   const [showInvoiceModal, setShowInvoiceModal] = useState(false);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false); // New state for confirmation
   const [selectedPedidoForInvoice, setSelectedPedidoForInvoice] = useState<PedidoConPagos | null>(null);
@@ -97,6 +105,11 @@ const MisPagos: React.FC = () => {
     fetchPagos();
     fetchCompanyDetails();
   }, []);
+
+  const handleVerPreliminarClick = (pedido: PedidoConPagos) => {
+    setSelectedPedidoForInvoice(pedido);
+    setShowInvoiceModal(true); // Directly show invoice modal
+  };
 
   const handleTotalizarClick = (pedido: PedidoConPagos) => {
     setSelectedPedidoForInvoice(pedido);
@@ -173,6 +186,17 @@ const MisPagos: React.FC = () => {
             className="sm:w-1/3"
             placeholder="Buscar por nombre de cliente..."
           />
+          <Select onValueChange={(value) => setEstadoFiltro(value)} value={estadoFiltro}>
+            <SelectTrigger className="sm:w-1/3">
+              <SelectValue placeholder="Filtrar por estado" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="">Todos</SelectItem>
+              <SelectItem value="pagado">Pagado</SelectItem>
+              <SelectItem value="abonado">Abonado</SelectItem>
+              <SelectItem value="sin pago">Sin Pago</SelectItem>
+            </SelectContent>
+          </Select>
           <Button onClick={fetchPagos} className="sm:w-auto w-full">
             Buscar
           </Button>
@@ -210,11 +234,15 @@ const MisPagos: React.FC = () => {
               </TableHeader>
               <TableBody>
                 {pagos
-                  .filter((pedido) =>
-                    clienteFiltro.trim() === ""
+                  .filter((pedido) => {
+                    const matchesCliente = clienteFiltro.trim() === ""
                       ? true
-                      : (pedido.cliente_nombre || "").toLowerCase().includes(clienteFiltro.trim().toLowerCase())
-                  )
+                      : (pedido.cliente_nombre || "").toLowerCase().includes(clienteFiltro.trim().toLowerCase());
+                    const matchesEstado = estadoFiltro === ""
+                      ? true
+                      : pedido.pago === estadoFiltro;
+                    return matchesCliente && matchesEstado;
+                  })
                   .map((pedido) => {
                   const totalPedido = calculateTotalPedido(pedido);
                   const montoAbonado = pedido.total_abonado || 0;
@@ -249,7 +277,15 @@ const MisPagos: React.FC = () => {
                           {pedido.pago}
                         </span>
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="flex gap-2">
+                          <Button
+                            onClick={() => handleVerPreliminarClick(pedido)}
+                            size="sm"
+                            variant="outline"
+                            className="bg-gray-500 hover:bg-gray-600 text-white"
+                          >
+                            Ver Preliminar
+                          </Button>
                           <Button
                             onClick={() => handleTotalizarClick(pedido)}
                             size="sm"
