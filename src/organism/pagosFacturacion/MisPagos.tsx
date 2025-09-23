@@ -185,7 +185,7 @@ const MisPagos: React.FC = () => {
             <SelectTrigger className="sm:w-1/3">
               <SelectValue placeholder="Filtrar por estado" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-white z-50">
               <SelectItem value="todos">Todos los estados</SelectItem>
               <SelectItem value="pagado">Pagado</SelectItem>
               <SelectItem value="abonado">Abonado</SelectItem>
@@ -275,6 +275,7 @@ const MisPagos: React.FC = () => {
                         </span>
                       </TableCell>
                       <TableCell className="flex gap-2">
+                        {(pedido.pago === "pagado" || pedido.pago === "abonado") && (
                           <Button
                             onClick={() => handleViewPreliminarClick(pedido)}
                             size="sm"
@@ -283,6 +284,7 @@ const MisPagos: React.FC = () => {
                           >
                             Ver Preliminar
                           </Button>
+                        )}
                           <Button
                             onClick={() => handleTotalizarClick(pedido)}
                             size="sm"

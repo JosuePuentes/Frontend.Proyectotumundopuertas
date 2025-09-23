@@ -19,14 +19,6 @@ import { // Added these imports
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
-import { // Added these imports
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from "@/components/ui/dialog";
 
 // Componente para gestionar pagos y abonos
 const PagoManager: React.FC<{
@@ -373,8 +365,7 @@ const Pedidos: React.FC = () => {
                   <TableHead className="w-24 sm:w-1/4">Fecha</TableHead>
                   <TableHead className="w-24 sm:w-1/4">Pago</TableHead>
                   <TableHead className="w-24 sm:w-1/4">Total</TableHead>
-                  <TableHead className="w-24 sm:w-1/4">Acciones</TableHead> {/* Added for "Ver Preliminar" button */}
-                </TableRow>
+                  </TableRow>
               </TableHeader>
               <TableBody>
                 {pedidos
@@ -430,16 +421,6 @@ const Pedidos: React.FC = () => {
                           )}
                         {total.toLocaleString("es-MX", { style: "currency", currency: "MXN" })}
                         </div>
-                      </TableCell>
-                      <TableCell> {/* Added for "Ver Preliminar" button */}
-                        <Button
-                          onClick={() => handleViewPreliminarClick(pedido)}
-                          size="sm"
-                          variant="outline"
-                          className="bg-blue-500 hover:bg-blue-600 text-white"
-                        >
-                          Ver Preliminar
-                        </Button>
                       </TableCell>
                     </TableRow>
                   );
