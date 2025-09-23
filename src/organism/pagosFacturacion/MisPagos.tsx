@@ -275,7 +275,7 @@ const MisPagos: React.FC = () => {
                         </span>
                       </TableCell>
                       <TableCell className="flex gap-2">
-                        {(pedido.pago === "pagado" || pedido.pago === "abonado") && (
+                        {(pedido.pago === "pagado" || pedido.pago === "abonado" || pedido.pago === "pendiente") && (
                           <Button
                             onClick={() => handleViewPreliminarClick(pedido)}
                             size="sm"
@@ -304,7 +304,7 @@ const MisPagos: React.FC = () => {
 
         {/* Invoice Modal */}
         <Dialog open={showInvoiceModal} onOpenChange={setShowInvoiceModal}>
-          <DialogContent className="sm:max-w-[600px] p-6 mx-auto">
+          <DialogContent className="sm:max-w-[600px] p-6">
             <DialogHeader>
               <DialogTitle className="text-2xl font-bold text-center">
                 {selectedPedidoForInvoice?.pago === "pagado" ? "Nota de Entrega" : "Comprobante de Abono"}
@@ -389,8 +389,13 @@ const MisPagos: React.FC = () => {
               </div>
             )}
             <DialogFooter className="mt-6 flex justify-between">
-              <Button onClick={() => setShowInvoiceModal(false)} variant="outline">Cerrar</Button>
-              <Button onClick={handlePrint} className="bg-green-500 hover:bg-green-600 text-white">Imprimir</Button>
+              <Button onClick={() => setShowInvoiceModal(false)} style={{backgroundColor: 'lightgray'}}>Cerrar</Button>
+              {selectedPedidoForInvoice?.pago === "pagado" && (
+                <Button onClick={handlePrint} className="bg-green-500 hover:bg-green-600 text-white">Imprimir</Button>
+              )}
+              {selectedPedidoForInvoice?.pago === "abonado" && (
+                <Button onClick={handlePrint} className="bg-red-500 hover:bg-red-600 text-white">Imprimir (Abonado)</Button>
+              )}
             </DialogFooter>
           </DialogContent>
         </Dialog>

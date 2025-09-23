@@ -19,6 +19,14 @@ import { // Added these imports
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 // Componente para gestionar pagos y abonos
 const PagoManager: React.FC<{
