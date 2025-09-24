@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import * as XLSX from 'xlsx';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
@@ -150,14 +152,35 @@ const CargarInventarioExcel: React.FC = () => {
     setShowInventoryPreview(true);
   };
 
-  const handleExportPdf = () => {
-    setMensaje('Exportando a PDF... (funcionalidad no implementada)');
-    // Implement PDF export logic here
-  };
+  const handleExportInventoryToExcel = () => {
+    if (!currentInventory || currentInventory.length === 0) {
+      setMensaje('No hay inventario para exportar a Excel.');
+      return;
+    }
 
-  const handleExportExcel = () => {
-    setMensaje('Exportando a Excel... (funcionalidad no implementada)');
-    // Implement Excel export logic here
+    setMensaje('Exportando a Excel...');
+    try {
+      const ws = XLSX.utils.json_to_sheet(currentInventory.map(item => ({
+        Código: item.codigo,
+        Nombre: item.nombre,
+        Descripción: item.descripcion,
+        Categoría: item.categoria,
+        Modelo: item.modelo,
+        Costo: item.costo,
+        'Costo Producción': item.costoProduccion,
+        Cantidad: item.cantidad,
+        Precio: item.precio,
+        Activo: item.activo ? 'Sí' : 'No',
+        Imágenes: item.imagenes.join(', '),
+      })));
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Inventario');
+      XLSX.writeFile(wb, 'inventario.xlsx');
+      setMensaje('Inventario exportado a inventario.xlsx');
+    } catch (error) {
+      console.error('Error exporting to Excel:', error);
+      setMensaje('Error al exportar a Excel.');
+    }
   };
 
   return (
@@ -240,8 +263,7 @@ const CargarInventarioExcel: React.FC = () => {
             <div className="mt-6">
               <h3 className="text-lg font-semibold mb-4">Inventario Actual</h3>
               <div className="flex gap-2 mb-4">
-                <Button onClick={handleExportPdf} variant="outline">Exportar a PDF</Button>
-                <Button onClick={handleExportExcel} variant="outline">Exportar a Excel</Button>
+                <Button onClick={handleExportInventoryToExcel} variant="outline">Exportar Inventario a Excel</Button>
               </div>
               <div className="max-h-96 overflow-y-auto border rounded-md">
                 <Table>

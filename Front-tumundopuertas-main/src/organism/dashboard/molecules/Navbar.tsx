@@ -31,6 +31,7 @@ const defaultLinks = [
   { label: "Crear Usuario", href: "/register" },
   { label: "Modificar Usuario", href: "/modificarusuario" },
   { label: "Reportes Comision", href: "/reportes/comisiones/produccion" },
+  { label: "Resumen Venta Diaria", href: "/resumen-diario" },
 ];
 
 const permisosRuta: Record<string, string | null> = {
@@ -56,6 +57,7 @@ const permisosRuta: Record<string, string | null> = {
   "/mispagos": "pagos",
   "/home": null,
   "/": null,
+  "/resumen-diario": "admin", // Assuming 'admin' permission for now
 };
 
 // --- Componente Navbar Mejorado ---
