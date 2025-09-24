@@ -225,7 +225,7 @@ function AppRouter() {
         <Route
           path="reportes/comisiones/produccion"
           element={
-            <ProtectedRoute permiso="admin">
+            <ProtectedRoute>
               <ReporteComisionesProduccion />
             </ProtectedRoute>
           }
