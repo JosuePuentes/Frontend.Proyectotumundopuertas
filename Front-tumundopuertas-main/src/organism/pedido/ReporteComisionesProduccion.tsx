@@ -40,6 +40,12 @@ const ReporteComisionesProduccion: React.FC = () => {
     "sin-ayudante" | "solo-ayudante" | "todos"
   >("sin-ayudante");
   const [busquedaEmpleado, setBusquedaEmpleado] = useState("");
+  let currentUserIdentifier = localStorage.getItem("identificador");
+  if (currentUserIdentifier && (currentUserIdentifier.startsWith('v') || currentUserIdentifier.startsWith('V'))) {
+    currentUserIdentifier = currentUserIdentifier.slice(1);
+  }
+  const currentUserPermisos = JSON.parse(localStorage.getItem("permisos") || "[]");
+  const isAdmin = currentUserPermisos.includes("admin");
 
   useEffect(() => {
     const fetchEmpleados = async () => {
@@ -62,6 +68,12 @@ const ReporteComisionesProduccion: React.FC = () => {
     };
     fetchEmpleados();
   }, []);
+
+  useEffect(() => {
+    if (!isAdmin) {
+      handleBuscar();
+    }
+  }, [isAdmin]);
 
   const permisosUnicos: string[] = Array.from(
     new Set(empleados.flatMap((empleado) => empleado.permisos || []))
@@ -97,6 +109,9 @@ const ReporteComisionesProduccion: React.FC = () => {
     const params = new URLSearchParams();
     if (fechaInicio) params.append("fecha_inicio", fechaInicio);
     if (fechaFin) params.append("fecha_fin", fechaFin);
+    if (!isAdmin && currentUserIdentifier) {
+      params.append("empleado_id", currentUserIdentifier);
+    }
     const res = await fetch(
       `${getApiUrl()}/pedidos/comisiones/produccion/terminadas/?${params.toString()}`
     );
