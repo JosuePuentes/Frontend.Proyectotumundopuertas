@@ -14,6 +14,7 @@ export function useItems() {
   const fetchItems = async (endpoint: string, options?: FetchOptions) => {
     setLoading(true);
     setError(null);
+    console.log("🔍 ITEMS - Iniciando petición a:", secureEndpoint);
     try {
       let secureEndpoint = endpoint;
       if (secureEndpoint.startsWith('http://')) {
@@ -22,7 +23,7 @@ export function useItems() {
         secureEndpoint = `https://${secureEndpoint}`;
       }
       console.log("🔍 ITEMS - URL original:", endpoint );
-console.log("🔍 ITEMS - URL final:", secureEndpoint);
+      console.log("🔍 ITEMS - URL final:", secureEndpoint);
       const res = await fetch(secureEndpoint, {
         method: options?.method || "GET",
         headers: {
@@ -31,13 +32,21 @@ console.log("🔍 ITEMS - URL final:", secureEndpoint);
         },
         body: options?.body ? JSON.stringify(options.body) : undefined,
       });
-      if (!res.ok) throw new Error("Error en la petición");
+      console.log("🔍 ITEMS - Respuesta de la petición:", res);
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error("🔍 ITEMS - Error en la respuesta de la API:", res.status, errorText);
+        throw new Error(`Error en la petición: ${res.status} ${errorText}`);
+      }
       const result = await res.json();
+      console.log("🔍 ITEMS - Datos recibidos:", result);
       setData(result);
     } catch (err: any) {
+      console.error("🔍 ITEMS - Error en fetchItems:", err);
       setError(err.message || "Error desconocido");
     } finally {
       setLoading(false);
+      console.log("🔍 ITEMS - Petición finalizada.");
     }
   };
 
