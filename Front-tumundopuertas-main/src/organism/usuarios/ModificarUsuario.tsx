@@ -56,7 +56,17 @@ const ModificarUsuario: React.FC = () => {
   useEffect(() => {
     setLoading(true);
     setError("");
-    fetch(`${getApiUrl()}/usuarios/all`)
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setError("No estás autenticado");
+      setLoading(false);
+      return;
+    }
+    fetch(`${getApiUrl()}/usuarios/all`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then((response) => {
         if (!response.ok) throw new Error("Error al obtener usuarios");
         return response.json();
@@ -133,9 +143,17 @@ const ModificarUsuario: React.FC = () => {
       if (form.password && form.password.length >= 6) {
         payload.password = form.password;
       }
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setError("No estás autenticado");
+        return;
+      }
       const res = await fetch(`${getApiUrl()}/usuarios/${usuarioSeleccionado?._id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify(payload),
       });
       if (!res.ok) throw new Error("Error al modificar usuario");
