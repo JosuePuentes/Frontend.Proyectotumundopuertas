@@ -62,6 +62,7 @@ interface PedidoPayload {
   pago: string;
   historial_pagos: RegistroPago[];
   total_abonado: number;
+  creado_por?: string; // Added field
 }
 
 type SelectedItem = {
@@ -255,6 +256,7 @@ const CrearPedido: React.FC = () => {
       ? clientesData.find((c: any) => String(c.rif) === String(clienteId))
       : null;
 
+    const usuario = localStorage.getItem("usuario"); // Retrieve user from localStorage
     const pedidoPayload: PedidoPayload = {
       cliente_id: String(clienteId),
       cliente_nombre: clienteObj?.nombre || "",
@@ -289,6 +291,7 @@ const CrearPedido: React.FC = () => {
         },
       ] : [],
       total_abonado: montoAbonar,
+      creado_por: usuario || undefined, // Add the user to the payload
     };
 
     try {
