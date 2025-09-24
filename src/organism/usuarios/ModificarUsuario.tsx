@@ -13,6 +13,7 @@ interface Usuario {
   identificador?: string;
   permisos?: string[];
   password?: string;
+  email?: string;
 }
 
   const permisosDisponibles = [
@@ -49,6 +50,7 @@ const ModificarUsuario: React.FC = () => {
     identificador: "",
     permisos: [] as string[],
     password: "",
+    email: "",
   });
 
   const navigate = useNavigate();
@@ -79,6 +81,7 @@ const ModificarUsuario: React.FC = () => {
         identificador: usuarioSeleccionado.identificador || "",
         permisos: usuarioSeleccionado.permisos || [],
         password: "",
+        email: usuarioSeleccionado.email || "",
       });
     }
   }, [usuarioSeleccionado]);
@@ -112,6 +115,8 @@ const ModificarUsuario: React.FC = () => {
       return "La contraseña debe tener al menos 6 caracteres.";
     if (!form.nombreCompleto.trim()) return "El nombre completo es obligatorio.";
     if (!form.identificador.trim()) return "El identificador es obligatorio.";
+    if (!form.email.trim()) return "El correo electrónico es obligatorio.";
+    if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(form.email)) return "El formato del correo electrónico no es válido.";
     return null;
   };
 
@@ -129,6 +134,7 @@ const ModificarUsuario: React.FC = () => {
         nombreCompleto: form.nombreCompleto,
         identificador: form.identificador,
         permisos: form.permisos,
+        email: form.email,
       };
       if (form.password && form.password.length >= 6) {
         payload.password = form.password;
@@ -207,6 +213,18 @@ const ModificarUsuario: React.FC = () => {
                 id="identificador"
                 name="identificador"
                 value={form.identificador}
+                onChange={handleChange}
+                className="mt-1"
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="email">Correo Electrónico</Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                value={form.email}
                 onChange={handleChange}
                 className="mt-1"
                 required

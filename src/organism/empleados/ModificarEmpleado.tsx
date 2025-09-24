@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router";
+import { getApiUrl } from "@/lib/api";
 
 interface Empleado {
   _id: string;
@@ -67,7 +68,7 @@ const ModificarEmpleado: React.FC = () => {
     const apiUrl = getApiUrl();
     setLoading(true);
     setError("");
-    fetch(`${apiUrl}/empleados/all`)
+    fetch(`${apiUrl}/empleados/all/`)
       .then((response) => {
         if (!response.ok) throw new Error("Error al obtener empleados");
         return response.json();
@@ -104,7 +105,7 @@ const ModificarEmpleado: React.FC = () => {
     setMensaje("");
     setError("");
     try {
-      const res = await fetch(`${apiUrl}/empleados/${data._id}`, {
+      const res = await fetch(`${apiUrl}/empleados/${data._id}/`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
