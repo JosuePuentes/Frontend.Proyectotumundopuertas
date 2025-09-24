@@ -148,17 +148,21 @@ const CargarInventarioExcel: React.FC = () => {
   };
 
   const handleShowInventoryPreview = () => {
+    console.log('Fetching current inventory...');
     fetchItems(`${getApiUrl()}/inventario/all`); // Fetch all items
     setShowInventoryPreview(true);
   };
 
   const handleExportPdf = () => {
+    console.log('Attempting to export to PDF.');
     if (!currentInventory || currentInventory.length === 0) {
       setMensaje('No hay inventario para exportar a PDF.');
+      console.log('No inventory data available for PDF export.');
       return;
     }
 
-        setMensaje('Exportando a PDF...');
+    setMensaje('Exportando a PDF...');
+    console.log('Current inventory data for PDF export:', currentInventory);
     try {
       const doc = new jsPDF();
       (doc as any).autoTable({
@@ -178,26 +182,25 @@ const CargarInventarioExcel: React.FC = () => {
       });
       doc.save('inventario.pdf');
       setMensaje('Inventario exportado a inventario.pdf');
+      console.log('PDF file generated successfully.');
     } catch (error) {
       console.error('Error exporting to PDF:', error);
+      console.log('Error object during PDF export:', error);
       setMensaje('Error al exportar a PDF.');
     }
   };
 
   const handleExportExcel = () => {
-    console.log('handleExportExcel called');
+    console.log('Attempting to export to Excel.');
     if (!currentInventory || currentInventory.length === 0) {
       setMensaje('No hay inventario para exportar a Excel.');
-      console.log('No inventory to export.');
+      console.log('No inventory data available for Excel export.');
       return;
     }
 
-        setMensaje('Exportando a Excel...');
-    console.log('Current inventory data:', currentInventory);
+    setMensaje('Exportando a Excel...');
+    console.log('Current inventory data for Excel export:', currentInventory);
     try {
-      // Add console log for currentInventory content
-      console.log('Content of currentInventory for Excel export:', JSON.stringify(currentInventory, null, 2));
-
       const ws = XLSX.utils.json_to_sheet(currentInventory.map(item => ({
         Código: item.codigo,
         Nombre: item.nombre,
@@ -211,9 +214,6 @@ const CargarInventarioExcel: React.FC = () => {
         Activo: item.activo ? 'Sí' : 'No',
         Imágenes: item.imagenes.join(', '),
       })));
-      // Add console log for the worksheet
-      console.log('Generated worksheet:', ws);
-
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, 'Inventario');
       XLSX.writeFile(wb, 'inventario.xlsx');
@@ -221,7 +221,6 @@ const CargarInventarioExcel: React.FC = () => {
       console.log('Excel file generated successfully.');
     } catch (error) {
       console.error('Error exporting to Excel:', error);
-      // Add console log for the error object
       console.log('Error object during Excel export:', error);
       setMensaje('Error al exportar a Excel.');
     }
