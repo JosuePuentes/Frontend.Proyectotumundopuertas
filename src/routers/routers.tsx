@@ -14,6 +14,8 @@ import FacturacionPage from "@/organism/facturacion/facturacion/FacturacionPage"
 import EnvioPage from "@/organism/envios/envio/Envio";
 import Register from "@/organism/auth/Register";
 import Login from "@/organism/auth/Login";
+import ForgotPassword from "@/organism/auth/ForgotPassword"; // Importa el nuevo componente
+import ResetPassword from "@/organism/auth/ResetPassword"; // Importa el nuevo componente
 import ReporteComisionesProduccion from "@/organism/pedido/ReporteComisionesProduccion";
 import ModificarItemPage from "@/organism/inventario/ModificarItemPage";
 import CargarInventarioExcel from "@/organism/inventario/CargarInventarioExcel";
@@ -224,12 +226,14 @@ function AppRouter() {
         <Route
           path="register"
           element={
-            <ProtectedRoute permiso="admin">
+            <ProtectedRoute permiso="crearusuarios">
               <Register />
             </ProtectedRoute>
           }
         />
         <Route path="login" element={<Login />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} /> {/* Nueva ruta */}
+        <Route path="/reset-password/:token" element={<ResetPassword />} /> {/* Nueva ruta con parámetro de token */}
         <Route path="*" element={<div>Página no encontrada</div>} />
       </Route>
     </Routes>

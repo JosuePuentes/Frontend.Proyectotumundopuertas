@@ -11,6 +11,7 @@ interface RegisterResponse {
     permisos?: string[];
     nombreCompleto: string;
     identificador: string;
+    email: string;
   }
 
   interface RegisterResponse {
@@ -46,7 +47,8 @@ interface RegisterResponse {
       password: "",
       permisos: [],
       nombreCompleto: "",
-      identificador: ""
+      identificador: "",
+      email: "",
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -58,6 +60,8 @@ interface RegisterResponse {
       if (!form.password || form.password.length < 6) return "La contraseña debe tener al menos 6 caracteres.";
       if (!form.nombreCompleto.trim()) return "El nombre completo es obligatorio.";
       if (!form.identificador.trim()) return "El identificador es obligatorio.";
+      if (!form.email.trim()) return "El correo electrónico es obligatorio.";
+      if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(form.email)) return "El formato del correo electrónico no es válido.";
       return null;
     };
 
@@ -101,7 +105,7 @@ interface RegisterResponse {
         }
         const data: RegisterResponse = await res.json();
     setSuccess(data.message);
-    setForm({ usuario: "", password: "", permisos: [], nombreCompleto: "", identificador: "" });
+    setForm({ usuario: "", password: "", permisos: [], nombreCompleto: "", identificador: "", email: "" });
       } catch (err: any) {
         setError(err.message || "Error desconocido");
       } finally {
@@ -141,6 +145,17 @@ interface RegisterResponse {
               type="text"
               name="identificador"
               value={form.identificador}
+              onChange={handleChange}
+              className="w-full border px-3 py-2 rounded"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block mb-2 font-semibold">Correo Electrónico</label>
+            <input
+              type="email"
+              name="email"
+              value={form.email}
               onChange={handleChange}
               className="w-full border px-3 py-2 rounded"
               required
