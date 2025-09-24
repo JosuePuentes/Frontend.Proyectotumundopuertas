@@ -43,6 +43,7 @@ const ModificarUsuario: React.FC = () => {
   const [error, setError] = useState<string>("");
   const [usuarioSeleccionado, setUsuarioSeleccionado] = useState<Usuario | null>(null);
   const [mensaje, setMensaje] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState("");
   const [form, setForm] = useState({
     usuario: "",
     nombreCompleto: "",
@@ -166,12 +167,26 @@ const ModificarUsuario: React.FC = () => {
     }
   };
 
+  const filteredUsuarios = usuarios.filter(u =>
+    u.nombreCompleto.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <Card className="w-full max-w-md mx-auto shadow-lg border border-gray-200 mt-8">
       <CardHeader>
         <CardTitle className="text-xl font-bold">Modificar Usuario</CardTitle>
       </CardHeader>
       <CardContent>
+        <div className="mb-4">
+          <Label htmlFor="searchUsuario">Buscar por nombre</Label>
+          <Input
+            id="searchUsuario"
+            placeholder="Escribe un nombre..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="mt-1"
+          />
+        </div>
         <div className="mb-6">
           <Label htmlFor="selectUsuario">Selecciona un usuario</Label>
           {loading ? (
@@ -186,7 +201,7 @@ const ModificarUsuario: React.FC = () => {
               onChange={(e) => handleSelectUsuario(e.target.value)}
             >
               <option value="">-- Selecciona --</option>
-              {usuarios.map((u) => (
+              {filteredUsuarios.map((u) => (
                 <option key={u._id} value={u._id}>
                   {u.nombreCompleto} ({u.usuario})
                 </option>
