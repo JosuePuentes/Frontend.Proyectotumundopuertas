@@ -57,6 +57,7 @@ interface PedidoPayload {
   fecha_creacion: string;
   fecha_actualizacion: string;
   estado_general: string;
+  usuario_creacion: string;
   items: PedidoItem[];
   seguimiento: PedidoSeguimiento[];
   pago: string;
@@ -255,12 +256,15 @@ const CrearPedido: React.FC = () => {
       ? clientesData.find((c: any) => String(c.rif) === String(clienteId))
       : null;
 
+    const usuarioCreacion = localStorage.getItem("usuario") || "Desconocido";
+
     const pedidoPayload: PedidoPayload = {
       cliente_id: String(clienteId),
       cliente_nombre: clienteObj?.nombre || "",
       fecha_creacion: fechaISO,
       fecha_actualizacion: fechaISO,
       estado_general: "pendiente",
+      usuario_creacion: usuarioCreacion,
       items: selectedItems.map((item) => {
         const itemData = Array.isArray(itemsData)
           ? (itemsData as any[]).find((it: any) => it._id === item.itemId)

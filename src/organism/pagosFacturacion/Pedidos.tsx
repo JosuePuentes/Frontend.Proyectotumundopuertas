@@ -160,6 +160,7 @@ interface Pedido {
   estado_general?: string;
   fecha_creacion?: string;
   pago?: string; // "sin pago" | "abonado" | "pagado"
+  creado_por?: string;
   items?: PedidoItem[];
   historial_pagos?: RegistroPago[];
   cliente_id?: string; // Added for invoice
@@ -201,6 +202,7 @@ const Pedidos: React.FC = () => {
   // State for invoice modal
   const [showInvoiceModal, setShowInvoiceModal] = useState(false); // Added for invoice modal
   const [selectedPedidoForInvoice, setSelectedPedidoForInvoice] = useState<Pedido | null>(null); // Added for invoice modal
+  const [montoAbonadoModal, setMontoAbonadoModal] = useState<number>(0); // Added for invoice modal
   const [companyDetails, setCompanyDetails] = useState<CompanyDetails | null>(null); // Added for invoice modal
 
   const fetchPedidos = async () => {
@@ -371,6 +373,7 @@ const Pedidos: React.FC = () => {
                   <TableHead className="w-32 sm:w-1/4">Cliente</TableHead>
                   <TableHead className="w-16 sm:w-20">Estado</TableHead>
                   <TableHead className="w-24 sm:w-1/4">Fecha</TableHead>
+                  <TableHead className="w-24 sm:w-1/4">Creado por</TableHead>
                   <TableHead className="w-24 sm:w-1/4">Pago</TableHead>
                   <TableHead className="w-24 sm:w-1/4">Total</TableHead>
                   </TableRow>
@@ -412,6 +415,7 @@ const Pedidos: React.FC = () => {
                           ? new Date(pedido.fecha_creacion).toLocaleDateString()
                           : "-"}
                       </TableCell>
+                      <TableCell>{pedido.creado_por || "-"}</TableCell>
                       <TableCell>
                         <div className="flex flex-col gap-1">
                           <PagoManager

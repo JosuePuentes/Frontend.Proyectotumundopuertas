@@ -22,6 +22,7 @@ interface Pedido {
   fecha_creacion: string;
   fecha_actualizacion?: string;
   estado_general: string;
+  creado_por?: string;
   items: PedidoItem[];
 }
 

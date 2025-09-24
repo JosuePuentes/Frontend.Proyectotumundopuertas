@@ -15,7 +15,8 @@ export function useEmpleado() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(endpoint, {
+      const secureEndpoint = endpoint.startsWith('http://') ? endpoint.replace('http://', 'https://') : endpoint;
+      const res = await fetch(secureEndpoint, {
         method: options?.method || "GET",
         headers: {
           "Content-Type": "application/json",

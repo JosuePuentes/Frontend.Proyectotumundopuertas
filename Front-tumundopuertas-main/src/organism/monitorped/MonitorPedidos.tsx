@@ -10,6 +10,7 @@ interface Pedido {
   _id: string;
   cliente_nombre: string;
   estado_general: string;
+  usuario_creacion?: string;
   fecha_creacion?: string;
   items?: Array<{
     nombre: string;
@@ -151,6 +152,11 @@ const MonitorPedidos: React.FC = () => {
                   {pedido.fecha_creacion && (
                     <div className="text-base text-gray-700">
                       Fecha: {new Date(pedido.fecha_creacion).toLocaleDateString()}
+                    </div>
+                  )}
+                  {pedido.usuario_creacion && (
+                    <div className="text-base text-gray-700">
+                      Creado por: {pedido.usuario_creacion}
                     </div>
                   )}
                   {Array.isArray(pedido.items) && pedido.items.length > 0 && (

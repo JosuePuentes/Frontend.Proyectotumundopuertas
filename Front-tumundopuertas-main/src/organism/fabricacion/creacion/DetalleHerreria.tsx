@@ -30,6 +30,7 @@ interface PedidoSeguimiento {
 interface Pedido {
   _id?: string;
   cliente_id: string;
+  usuario_creacion: string;
   fecha_creacion: string;
   fecha_actualizacion: string;
   estado_general: string;
@@ -58,6 +59,10 @@ const DetalleHerreria: React.FC<DetalleHerreriaProps> = ({ pedido, onClose }) =>
           <div className="flex flex-col gap-2">
             <span className="font-semibold text-gray-700">Cliente</span>
             <span className="text-lg font-bold text-blue-700">{pedido.cliente_id}</span>
+          </div>
+          <div className="flex flex-col gap-2">
+            <span className="font-semibold text-gray-700">Creado por</span>
+            <span className="text-lg font-bold text-blue-700">{pedido.usuario_creacion}</span>
           </div>
           <div className="flex flex-row gap-4 items-center justify-end md:justify-start">
             <div className="flex flex-col items-center">

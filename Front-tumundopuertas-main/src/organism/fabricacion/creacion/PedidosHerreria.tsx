@@ -35,6 +35,7 @@ interface PedidoSeguimiento {
 interface Pedido {
   _id: string;
   cliente_id: string;
+  usuario_creacion: string;
   fecha_creacion: string;
   fecha_actualizacion: string;
   estado_general: string;

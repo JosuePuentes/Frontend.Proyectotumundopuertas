@@ -11,6 +11,7 @@ interface Pedido {
   cliente_nombre: string;
   estado_general: string;
   fecha_creacion?: string;
+  creado_por?: string; // Creador del pedido
   items?: Array<{
     nombre: string;
     descripcion: string;
