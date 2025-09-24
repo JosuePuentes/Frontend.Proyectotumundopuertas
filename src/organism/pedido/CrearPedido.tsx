@@ -294,6 +294,8 @@ const CrearPedido: React.FC = () => {
       creado_por: usuario || undefined, // Add the user to the payload
     };
 
+    console.log("Enviando este payload al backend:", pedidoPayload);
+
     try {
       const resultado = await fetchPedido(`/pedidos/`, {
         method: "POST",
