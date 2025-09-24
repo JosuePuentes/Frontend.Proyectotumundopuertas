@@ -11,8 +11,18 @@ import {
   TableBody,
   TableCell,
 } from '@/components/ui/table';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog';
 import { getApiUrl } from "@/lib/api";
 import { useItems } from '@/hooks/useItems'; // Import useItems hook
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 interface InventarioItem {
   codigo: string;
@@ -34,6 +44,8 @@ const CargarInventarioExcel: React.FC = () => {
   const [mensaje, setMensaje] = useState('');
   const [showInventoryPreview, setShowInventoryPreview] = useState(false);
   const { data: currentInventory, fetchItems } = useItems(); // Use useItems hook
+  const [showExportDialog, setShowExportDialog] = useState(false);
+  const [exportType, setExportType] = useState<'pdf' | 'excel' | null>(null);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -151,13 +163,39 @@ const CargarInventarioExcel: React.FC = () => {
   };
 
   const handleExportPdf = () => {
-    setMensaje('Exportando a PDF... (funcionalidad no implementada)');
-    // Implement PDF export logic here
+    setExportType('pdf');
+    setShowExportDialog(true);
   };
 
   const handleExportExcel = () => {
-    setMensaje('Exportando a Excel... (funcionalidad no implementada)');
-    // Implement Excel export logic here
+    setExportType('excel');
+    setShowExportDialog(true);
+  };
+
+  const handleConfirmExport = () => {
+    if (exportType === 'pdf') {
+      const doc = new jsPDF();
+      doc.text('Inventario Actual', 20, 10);
+      (doc as any).autoTable({
+        head: [['Código', 'Descripción', 'Modelo', 'Costo', 'Existencia', 'Precio']],
+        body: currentInventory.map((item: any) => [
+          item.codigo,
+          item.descripcion,
+          item.modelo,
+          item.costo,
+          item.cantidad,
+          item.precio,
+        ]),
+      });
+      doc.save('inventario.pdf');
+    } else if (exportType === 'excel') {
+      const worksheet = XLSX.utils.json_to_sheet(currentInventory);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Inventario');
+      XLSX.writeFile(workbook, 'inventario.xlsx');
+    }
+    setShowExportDialog(false);
+    setExportType(null);
   };
 
   return (
@@ -273,6 +311,22 @@ const CargarInventarioExcel: React.FC = () => {
           )}
         </div>
       </CardContent>
+      <Dialog open={showExportDialog} onOpenChange={setShowExportDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirmar Exportación</DialogTitle>
+            <DialogDescription>
+              ¿Estás seguro de que quieres exportar el inventario como {exportType?.toUpperCase()}?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowExportDialog(false)}>
+              Cancelar
+            </Button>
+            <Button onClick={handleConfirmExport}>Confirmar</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 };
