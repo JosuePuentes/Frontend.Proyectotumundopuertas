@@ -4,6 +4,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { getApiUrl } from "@/lib/api";
 // import { useEmpleado } from "@/hooks/useEmpleado";
 interface empleado {
     id: string;
@@ -55,7 +56,7 @@ const CrearEmpleado: React.FC = () => {
         }
         const apiUrl = getApiUrl();
         try {
-            const response = await fetch(`${apiUrl}/empleados`, {
+            const response = await fetch(`${apiUrl}/empleados/`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
