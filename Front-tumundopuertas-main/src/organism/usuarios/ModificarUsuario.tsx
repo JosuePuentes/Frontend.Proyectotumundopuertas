@@ -55,8 +55,7 @@ const ModificarUsuario: React.FC = () => {
 
   useEffect(() => {
     setLoading(true);
-    setError("");
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("access_token");
     if (!token) {
       setError("No estás autenticado");
       setLoading(false);
