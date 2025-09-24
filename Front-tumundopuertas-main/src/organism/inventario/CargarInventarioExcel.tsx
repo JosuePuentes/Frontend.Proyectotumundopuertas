@@ -312,7 +312,7 @@ const CargarInventarioExcel: React.FC = () => {
         </div>
       </CardContent>
       <Dialog open={showExportDialog} onOpenChange={setShowExportDialog}>
-        <DialogContent>
+        <DialogContent style={{ backgroundColor: 'white' }}>
           <DialogHeader>
             <DialogTitle>Confirmar Exportación</DialogTitle>
             <DialogDescription>
