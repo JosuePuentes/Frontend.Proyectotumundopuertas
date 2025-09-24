@@ -52,7 +52,7 @@ const ReporteComisionesProduccion: React.FC = () => {
       setLoading(true);
       try {
         const res = await fetch(`${getApiUrl()}/empleados/all/`);
-        const empleadosData = await res.json();
+        let empleadosData = await res.json();
         empleadosData.forEach((empleado: any) => {
           if (
             typeof empleado.identificador === "string" &&
@@ -62,12 +62,17 @@ const ReporteComisionesProduccion: React.FC = () => {
             empleado.identificador = empleado.identificador.slice(1);
           }
         });
+        if (!isAdmin && currentUserIdentifier) {
+          empleadosData = empleadosData.filter(
+            (empleado: any) => empleado.identificador === currentUserIdentifier
+          );
+        }
         setEmpleados(empleadosData);
       } catch (err) {}
       setLoading(false);
     };
     fetchEmpleados();
-  }, []);
+  }, [isAdmin, currentUserIdentifier]);
 
   useEffect(() => {
     if (!isAdmin) {
