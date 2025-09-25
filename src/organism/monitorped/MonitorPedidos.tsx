@@ -23,10 +23,11 @@ interface Pedido {
 const MonitorPedidos: React.FC = () => {
   const [pedidos, setPedidos] = useState<Pedido[]>([]);
   const [loading, setLoading] = useState(false);
-  const [search, setSearch] = useState("");
+  const [clienteFilter, setClienteFilter] = useState("");
+  const [usuarioFilter, setUsuarioFilter] = useState("");
   const [fechaInicio, setFechaInicio] = useState<string>("");
   const [fechaFin, setFechaFin] = useState<string>("");
-  const [shouldSearch, setShouldSearch] = useState(false);
+  const [shouldSearch, setShouldSearch] = useState(true); // Buscar al cargar
   const apiUrl = getApiUrl();
 
   const ordenMap: Record<string, string> = {
@@ -54,8 +55,21 @@ const MonitorPedidos: React.FC = () => {
         }
         const res = await fetch(url);
         const data = await res.json();
-        setPedidos(Array.isArray(data) ? data : []);
-      } catch {}
+        if (Array.isArray(data)) {
+          // Ordenar por fecha de creación descendente
+          const sortedData = data.sort(
+            (a, b) =>
+              new Date(b.fecha_creacion || 0).getTime() -
+              new Date(a.fecha_creacion || 0).getTime()
+          );
+          setPedidos(sortedData);
+        } else {
+          setPedidos([]);
+        }
+      } catch (err) {
+        console.error("Error fetching pedidos:", err);
+        setPedidos([]);
+      }
       setLoading(false);
       setShouldSearch(false);
     };
@@ -72,85 +86,94 @@ const MonitorPedidos: React.FC = () => {
         body: JSON.stringify({ pedido_id: pedidoId, nuevo_estado_general: estadoSeleccionado[pedidoId] }),
       });
       if (!res.ok) throw new Error("Error actualizando estado");
-      // Actualizar localmente el estado
       setPedidos((prev) => prev.map((p) => p._id === pedidoId ? { ...p, estado_general: estadoSeleccionado[pedidoId] } : p));
-    } catch {}
+    } catch (err) {
+      console.error("Error updating estado:", err);
+    }
     setActualizando("");
   };
 
-  const pedidosFiltrados = pedidos.filter(
-    (p) =>
-      (ordenFilter === "" || p.estado_general === ordenFilter) &&
-      ((p.cliente_nombre?.toLowerCase?.().includes(search.toLowerCase()) || "") ||
-        (p.estado_general?.toLowerCase?.().includes(search.toLowerCase()) || "") ||
-        (p._id?.includes(search) || ""))
-  );
+  const pedidosFiltrados = pedidos.filter((p) => {
+    const matchesOrden = ordenFilter === "" || p.estado_general === ordenFilter;
+    const matchesCliente = p.cliente_nombre?.toLowerCase().includes(clienteFilter.toLowerCase());
+    const matchesUsuario = p.creado_por?.toLowerCase().includes(usuarioFilter.toLowerCase());
+    return matchesOrden && matchesCliente && matchesUsuario;
+  });
 
   return (
     <div className="max-w-4xl mx-auto mt-8">
       <h2 className="text-2xl font-bold mb-6">Monitor de Pedidos</h2>
-      <div className="flex gap-4 mb-6">
+      
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 p-4 border rounded-lg bg-gray-50">
         <Input
-          placeholder="Buscar por cliente, estado o ID..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-1/3"
+          placeholder="Buscar por Cliente..."
+          value={clienteFilter}
+          onChange={(e) => setClienteFilter(e.target.value)}
         />
         <Input
-          type="date"
-          value={fechaInicio}
-          onChange={(e) => setFechaInicio(e.target.value)}
-          className="w-1/6"
+          placeholder="Buscar por Usuario..."
+          value={usuarioFilter}
+          onChange={(e) => setUsuarioFilter(e.target.value)}
         />
-        <Input
-          type="date"
-          value={fechaFin}
-          onChange={(e) => setFechaFin(e.target.value)}
-          className="w-1/6"
-        />
-        <button
-          className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700"
-          onClick={() => setShouldSearch(true)}
-        >
-          Buscar
-        </button>
+        <Select value={ordenFilter} onValueChange={setOrdenFilter}>
+          <SelectTrigger>
+            <SelectValue placeholder="Filtrar por estado" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="">Todos los estados</SelectItem>
+            {Object.entries(ordenMap).map(([key, label]) => (
+              <SelectItem key={key} value={key}>{label}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <div className="flex items-center gap-2 md:col-span-3">
+            <Input
+              type="date"
+              value={fechaInicio}
+              onChange={(e) => setFechaInicio(e.target.value)}
+              className="w-full"
+            />
+            <span className="mx-2">-</span>
+            <Input
+              type="date"
+              value={fechaFin}
+              onChange={(e) => setFechaFin(e.target.value)}
+              className="w-full"
+            />
+            <Button onClick={() => setShouldSearch(true)} className="w-full md:w-auto">
+              Buscar por Fecha
+            </Button>
+        </div>
       </div>
-        <select
-          className="border rounded px-2 py-1 w-1/3 mb-4"
-          value={ordenFilter}
-          onChange={(e) => setOrdenFilter(e.target.value)}
-        >
-          <option value="">Todos los estados</option>
-          {Object.entries(ordenMap).map(([key, label]) => (
-            <option key={key} value={key}>{label}</option>
-          ))}
-        </select>
+
       {loading ? (
         <div>Cargando pedidos...</div>
       ) : pedidosFiltrados.length === 0 ? (
-        <div className="text-gray-500">No hay pedidos para mostrar.</div>
+        <div className="text-gray-500">No hay pedidos para mostrar con los filtros actuales.</div>
       ) : (
         <ul className="space-y-4">
           {pedidosFiltrados.map((pedido) => (
             <li key={pedido._id}>
               <Card>
                 <CardHeader>
-                  <CardTitle>
-                    Pedido: {pedido._id}
-                    <Badge variant="secondary" className="ml-2">
-                      {pedido.estado_general}
+                  <CardTitle className="flex justify-between items-center">
+                    <span>Pedido: {pedido._id.slice(-6)}</span>
+                    <Badge variant="secondary">
+                      {ordenMap[pedido.estado_general] || pedido.estado_general}
                     </Badge>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="mb-2 text-base font-bold text-gray-900">
-                    Cliente: <span className="font-normal text-gray-700">{pedido.cliente_nombre}</span>
+                  <div className="mb-2">
+                    <strong>Cliente:</strong> {pedido.cliente_nombre}
                   </div>
-                  <div className="mb-2 text-base font-bold text-blue-700">
-                    Estado general: <span className="font-normal text-blue-900">{ordenMap[pedido.estado_general] || pedido.estado_general}</span>
-                  </div>
+                  {pedido.creado_por && (
+                    <div className="text-sm text-gray-600">
+                      <strong>Creado por:</strong> {pedido.creado_por}
+                    </div>
+                  )}
                   {pedido.fecha_creacion && (
-                    <div className="text-base text-gray-700">
+                    <div className="text-sm text-gray-500">
                       Fecha: {new Date(pedido.fecha_creacion).toLocaleDateString()}
                     </div>
                   )}

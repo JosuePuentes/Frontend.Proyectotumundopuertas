@@ -257,6 +257,10 @@ const CrearPedido: React.FC = () => {
       : null;
 
     const usuario = localStorage.getItem("usuario"); // Retrieve user from localStorage
+    
+    // DEBUG: Show alert with the user value
+    alert(`El usuario que se enviará es: '${usuario}'`);
+
     const pedidoPayload: PedidoPayload = {
       cliente_id: String(clienteId),
       cliente_nombre: clienteObj?.nombre || "",
@@ -293,8 +297,6 @@ const CrearPedido: React.FC = () => {
       total_abonado: montoAbonar,
       creado_por: usuario || undefined, // Add the user to the payload
     };
-
-    console.log("Enviando este payload al backend:", pedidoPayload);
 
     try {
       const resultado = await fetchPedido(`/pedidos/`, {
