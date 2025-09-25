@@ -20,8 +20,7 @@ export function usePedido() {
     const apiurl = getApiUrl();
 
     // Get token from local storage
-    const user = JSON.parse(localStorage.getItem("user") || "{}");
-    const token = user?.token;
+    const token = localStorage.getItem("access_token");
 
     try {
       const headers: Record<string, string> = {
