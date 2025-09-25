@@ -31,6 +31,7 @@ const MonitorPedidos: React.FC = () => {
   const apiUrl = getApiUrl();
 
   const ordenMap: Record<string, string> = {
+    pendiente: "Pendiente",
     orden1: "Herreria",
     orden2: "Masillar/Pintar",
     orden3: "Manillar",
