@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-// Trigger new deployment
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -32,6 +31,7 @@ const MonitorPedidos: React.FC = () => {
   const apiUrl = getApiUrl();
 
   const ordenMap: Record<string, string> = {
+    pendiente: "Pendiente",
     orden1: "Herreria",
     orden2: "Masillar/Pintar",
     orden3: "Manillar",
@@ -122,7 +122,6 @@ const MonitorPedidos: React.FC = () => {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="">Todos los estados</SelectItem>
-            <SelectItem value="pendiente">Pendiente</SelectItem>
             {Object.entries(ordenMap).map(([key, label]) => (
               <SelectItem key={key} value={key}>{label}</SelectItem>
             ))}
@@ -144,6 +143,9 @@ const MonitorPedidos: React.FC = () => {
             />
             <Button onClick={() => setShouldSearch(true)} className="w-full md:w-auto">
               Buscar por Fecha
+            </Button>
+            <Button onClick={() => setOrdenFilter("pendiente")} className="w-full md:w-auto">
+              Pendientes
             </Button>
         </div>
       </div>
