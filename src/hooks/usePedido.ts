@@ -18,13 +18,24 @@ export function usePedido() {
     setError(null);
     setStatus(null);
     const apiurl = getApiUrl();
+
+    // Get token from local storage
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    const token = user?.token;
+
     try {
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+        ...(options?.headers || {}),
+      };
+
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
+
       const res = await fetch(`${apiurl}${endpoint}`, {
         method: options?.method || "GET",
-        headers: {
-          "Content-Type": "application/json",
-          ...(options?.headers || {}),
-        },
+        headers,
         body: options?.body ? JSON.stringify(options.body) : undefined,
       });
       const result = await res.json();

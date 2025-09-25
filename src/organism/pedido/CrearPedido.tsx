@@ -272,7 +272,6 @@ const CrearPedido: React.FC = () => {
       fecha_creacion: fechaISO,
       fecha_actualizacion: fechaISO,
       estado_general: "pendiente",
-      creado_por: user?.usuario || "N/A",
       items: selectedItems.map((item) => {
         const itemData = Array.isArray(itemsData)
           ? (itemsData as any[]).find((it: any) => it._id === item.itemId)
