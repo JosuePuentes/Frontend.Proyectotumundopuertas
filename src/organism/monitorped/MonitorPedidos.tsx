@@ -28,6 +28,7 @@ const MonitorPedidos: React.FC = () => {
   const [fechaInicio, setFechaInicio] = useState<string>("");
   const [fechaFin, setFechaFin] = useState<string>("");
   const [shouldSearch, setShouldSearch] = useState(true); // Buscar al cargar
+  const [verSoloPendientes, setVerSoloPendientes] = useState(false);
   const apiUrl = getApiUrl();
 
   const ordenMap: Record<string, string> = {
@@ -95,9 +96,15 @@ const MonitorPedidos: React.FC = () => {
   };
 
   const pedidosFiltrados = pedidos.filter((p) => {
-    const matchesOrden = ordenFilter === "" || p.estado_general === ordenFilter;
     const matchesCliente = (p.cliente_nombre || "").toLowerCase().includes(clienteFilter.toLowerCase());
     const matchesUsuario = (p.creado_por || "").toLowerCase().includes(usuarioFilter.toLowerCase());
+    const matchesOrden = ordenFilter === "" || p.estado_general === ordenFilter;
+
+    if (verSoloPendientes) {
+      const isPending = p.estado_general !== 'orden6' && p.estado_general !== 'cancelado';
+      return isPending && matchesCliente && matchesUsuario && matchesOrden;
+    }
+
     return matchesOrden && matchesCliente && matchesUsuario;
   });
 
@@ -144,8 +151,8 @@ const MonitorPedidos: React.FC = () => {
             <Button onClick={() => setShouldSearch(true)} className="w-full md:w-auto">
               Buscar por Fecha
             </Button>
-            <Button onClick={() => setOrdenFilter("pendiente")} className="w-full md:w-auto">
-              Pendientes
+            <Button onClick={() => setVerSoloPendientes(!verSoloPendientes)} className="w-full md:w-auto">
+              {verSoloPendientes ? "Mostrar Todos" : "Ver Pendientes"}
             </Button>
         </div>
       </div>
