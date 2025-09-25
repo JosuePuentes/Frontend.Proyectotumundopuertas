@@ -168,7 +168,7 @@ const ModificarUsuario: React.FC = () => {
   };
 
   const filteredUsuarios = usuarios.filter(u =>
-    u.nombreCompleto.toLowerCase().includes(searchTerm.toLowerCase())
+    (u.nombreCompleto || '').toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
