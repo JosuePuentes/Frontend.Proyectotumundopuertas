@@ -95,8 +95,8 @@ const MonitorPedidos: React.FC = () => {
 
   const pedidosFiltrados = pedidos.filter((p) => {
     const matchesOrden = ordenFilter === "" || p.estado_general === ordenFilter;
-    const matchesCliente = p.cliente_nombre?.toLowerCase().includes(clienteFilter.toLowerCase());
-    const matchesUsuario = p.creado_por?.toLowerCase().includes(usuarioFilter.toLowerCase());
+    const matchesCliente = (p.cliente_nombre || "").toLowerCase().includes(clienteFilter.toLowerCase());
+    const matchesUsuario = (p.creado_por || "").toLowerCase().includes(usuarioFilter.toLowerCase());
     return matchesOrden && matchesCliente && matchesUsuario;
   });
 
