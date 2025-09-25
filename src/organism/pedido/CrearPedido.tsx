@@ -4,7 +4,6 @@ import {
   FaClipboardList,
   FaSearch,
   FaTrashRestore,
-  FaMoneyBillWave,
 } from "react-icons/fa";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -16,7 +15,6 @@ import { Separator } from "@/components/ui/separator";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { usePedido } from "@/hooks/usePedido";
 import { useClientes } from "@/hooks/useClientes";
-import { getApiUrl } from "@/lib/api";
 import { useItems } from "@/hooks/useItems";
 import ImageDisplay from "@/upfile/ImageDisplay";
 
@@ -45,34 +43,36 @@ interface PedidoSeguimiento {
   notas?: string;
 }
 
-interface RegistroPago {
-  fecha: string;
-  monto: number;
-  estado: string;
-}
-
 interface PedidoPayload {
   cliente_id: string;
   cliente_nombre: string;
   fecha_creacion: string;
   fecha_actualizacion: string;
   estado_general: string;
+  creado_por?: string;
   items: PedidoItem[];
   seguimiento: PedidoSeguimiento[];
-  pago: string;
-  historial_pagos: RegistroPago[];
-  total_abonado: number;
-  creado_por?: string; // Added field
 }
 
 type SelectedItem = {
   itemId: string;
+  codigo: string; // Added
+  nombre: string;
+  descripcion: string;
+  departamento?: string;
+  marca?: string;
+  categoria: string;
+  precio: number;
+  costo: number;
+  costoProduccion: number;
   cantidad: number;
-  search: string;
-  precio?: number;
+  existencia: number;
+  activo: boolean;
   detalleitem?: string;
   showSuggestions?: boolean;
   confirmed?: boolean;
+  imagenes?: string[];
+  search?: string;
 };
 
 const CrearPedido: React.FC = () => {
@@ -87,7 +87,6 @@ const CrearPedido: React.FC = () => {
   const [mensaje, setMensaje] = useState<string>("");
   const [mensajeTipo, setMensajeTipo] = useState<"error" | "success" | "">("");
   const [enviando, setEnviando] = useState(false);
-  const [montoAbonar, setMontoAbonar] = useState<number>(0);
 
   const { fetchPedido } = usePedido();
   const {
@@ -99,7 +98,7 @@ const CrearPedido: React.FC = () => {
   const { data: itemsData, loading: itemsLoading, fetchItems } = useItems();
 
   const blurTimeouts = useRef<Record<number, number>>({});
-  const apiUrl = getApiUrl();
+  const apiUrl = import.meta.env.VITE_API_URL || "https://localhost:3000";
 
   useEffect(() => {
     fetchClientes(`${apiUrl}/clientes/all`);
@@ -136,7 +135,16 @@ const CrearPedido: React.FC = () => {
       ...prev,
       {
         itemId: "",
+        codigo: "", // Added default
+        nombre: "", // Added default
+        descripcion: "", // Added default
+        categoria: "", // Added default
+        precio: 0, // Added default
+        costo: 0, // Added default
+        costoProduccion: 0, // Added default
         cantidad: 1,
+        existencia: 0, // Added default
+        activo: true, // Added default
         search: "",
         showSuggestions: false,
         confirmed: false,
@@ -171,7 +179,7 @@ const CrearPedido: React.FC = () => {
           if (!copy[index].confirmed) {
             copy[index].search = "";
             copy[index].itemId = "";
-            copy[index].precio = undefined;
+            copy[index].precio = 0;
           }
           copy[index].showSuggestions = false;
         }
@@ -256,10 +264,7 @@ const CrearPedido: React.FC = () => {
       ? clientesData.find((c: any) => String(c.rif) === String(clienteId))
       : null;
 
-    const usuario = localStorage.getItem("usuario"); // Retrieve user from localStorage
-    
-    // DEBUG: Show alert with the user value
-    alert(`El usuario que se enviará es: '${usuario}'`);
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
 
     const pedidoPayload: PedidoPayload = {
       cliente_id: String(clienteId),
@@ -267,6 +272,7 @@ const CrearPedido: React.FC = () => {
       fecha_creacion: fechaISO,
       fecha_actualizacion: fechaISO,
       estado_general: "pendiente",
+      creado_por: user?.usuario || "N/A",
       items: selectedItems.map((item) => {
         const itemData = Array.isArray(itemsData)
           ? (itemsData as any[]).find((it: any) => it._id === item.itemId)
@@ -283,19 +289,10 @@ const CrearPedido: React.FC = () => {
           cantidad: item.cantidad,
           activo: itemData?.activo ?? true,
           detalleitem: item.detalleitem || "",
+          imagenes: itemData?.imagenes ?? [],
         };
       }),
       seguimiento,
-      pago: montoAbonar > 0 ? "abonado" : "sin pago",
-      historial_pagos: montoAbonar > 0 ? [
-        {
-          fecha: fechaISO,
-          monto: montoAbonar,
-          estado: "abonado",
-        },
-      ] : [],
-      total_abonado: montoAbonar,
-      creado_por: usuario || undefined, // Add the user to the payload
     };
 
     try {
@@ -311,7 +308,6 @@ const CrearPedido: React.FC = () => {
         setClienteSearch("");
         setSelectedItems([]);
         setFecha(new Date().toISOString().slice(0, 10));
-        setMontoAbonar(0); // Reset montoAbonar
       } else {
         setMensaje(resultado?.error || "Ocurrió un error al crear el pedido.");
         setMensajeTipo("error");
@@ -482,8 +478,8 @@ const CrearPedido: React.FC = () => {
 
             <div className="space-y-4">
               {selectedItems.map((item, idx) => {
-                const filtered: any[] = (itemsData || []).filter((it: any) =>
-                  it.nombre.toLowerCase().includes(item.search.toLowerCase())
+                const filtered: any[] = (itemsData as any[])?.filter((it) =>
+                  it.nombre.toLowerCase().includes(item.search?.toLowerCase() || '')
                 );
 
                 // Buscar el itemData para mostrar imágenes
@@ -501,7 +497,7 @@ const CrearPedido: React.FC = () => {
                         <FaSearch className="absolute left-3 top-3 text-gray-400" />
                         <Input
                           className="pl-9 focus:ring-2 focus:ring-blue-400"
-                          value={item.search}
+                          value={item.search || ''}
                           onChange={(e) =>
                             handleItemChange(idx, "search", e.target.value)
                           }
@@ -518,7 +514,7 @@ const CrearPedido: React.FC = () => {
                           />
                       </div>
                       {item.showSuggestions &&
-                        item.search.trim().length > 0 && (
+                        item.search && item.search.trim().length > 0 && (
                           <ScrollArea className="absolute left-0 right-0 z-30 mt-2 overflow-auto border rounded-xl bg-white max-h-44 shadow-lg">
                             {filtered.length > 0 ? (
                               filtered.map((f: any, fidx: number) => (
@@ -530,18 +526,12 @@ const CrearPedido: React.FC = () => {
                                   }}
                                   className="px-3 py-2 hover:bg-blue-50 cursor-pointer transition-colors"
                                 >
-                                  <div className="flex flex-col">
-                                    <span className="font-semibold text-gray-800 text-base">{f.nombre}</span>
-                                    <span className="text-sm text-gray-600">{f.descripcion}</span>
-                                  </div>
-                                  <div className="flex justify-between items-center mt-1">
-                                    <span className="text-xs text-gray-500">Código: {f.codigo}</span>
-                                    <span className="text-xs text-gray-500">Modelo: {f.modelo}</span>
-                                  </div>
-                                  <div className="flex justify-between items-center mt-1">
-                                    <span className="text-sm font-medium text-blue-600">Precio: ${f.precio}</span>
-                                    <span className="text-sm text-gray-700">Cantidad: {f.cantidad}</span>
-                                  </div>
+                                  <span className="font-medium text-gray-800">
+                                    {f.nombre}
+                                  </span>
+                                  <span className="ml-2 text-xs text-gray-500">
+                                    ${f.precio}
+                                  </span>
                                 </div>
                               ))
                             ) : (
@@ -650,9 +640,9 @@ const CrearPedido: React.FC = () => {
               )}
             </div>
 
-            {/* Totales y Abono */}
+            {/* Totales */}
             {selectedItems.length > 0 && (
-              <div className="mt-6 flex flex-col md:flex-row justify-end items-end md:items-center gap-4">
+              <div className="mt-6 flex justify-end">
                 <Card className="bg-gradient-to-r from-blue-50 to-blue-100 px-6 py-4 rounded-xl shadow-md">
                   <p className="text-gray-700 font-medium">
                     Total items:{" "}
@@ -671,29 +661,6 @@ const CrearPedido: React.FC = () => {
                     </span>
                   </p>
                 </Card>
-
-                <div className="flex items-center gap-2">
-                  <Label htmlFor="montoAbonar" className="text-sm font-semibold text-gray-700">Abonar:</Label>
-                  <Input
-                    id="montoAbonar"
-                    type="number"
-                    min={0}
-                    step="0.01"
-                    value={montoAbonar}
-                    onChange={(e) => setMontoAbonar(Number(e.target.value))}
-                    placeholder="0.00"
-                    className="w-32 focus:ring-2 focus:ring-blue-400"
-                  />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setMontoAbonar(totalMonto)}
-                    disabled={totalMonto === 0}
-                  >
-                    <FaMoneyBillWave className="mr-2" /> Total
-                  </Button>
-                </div>
               </div>
             )}
           </div>
@@ -728,7 +695,7 @@ const CrearPedido: React.FC = () => {
             >
               <AlertTitle>
                 {mensajeTipo === "error" ? "Error" : "Éxito"}
-              </AlertTitle>
+              </Aler tTitle>
               <AlertDescription>{mensaje}</AlertDescription>
             </Alert>
           </div>
