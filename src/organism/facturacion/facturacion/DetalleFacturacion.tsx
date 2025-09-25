@@ -54,6 +54,11 @@ const DetalleFacturacion: React.FC<DetalleFacturacionProps> = ({ pedido }) => {
           <div className="flex flex-col gap-2">
             <span className="font-semibold text-gray-700">Cliente</span>
             <span className="text-lg font-bold text-blue-700">{pedido.cliente_id}</span>
+            {pedido.creado_por && (
+              <div className="text-sm text-gray-600">
+                <strong>Creado por:</strong> {pedido.creado_por}
+              </div>
+            )}
           </div>
           <div className="flex flex-row gap-4 items-center justify-end md:justify-start">
             <div className="flex flex-col items-center">
