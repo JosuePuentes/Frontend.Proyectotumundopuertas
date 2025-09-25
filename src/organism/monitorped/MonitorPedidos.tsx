@@ -31,7 +31,6 @@ const MonitorPedidos: React.FC = () => {
   const apiUrl = getApiUrl();
 
   const ordenMap: Record<string, string> = {
-    pendiente: "Pendiente",
     orden1: "Herreria",
     orden2: "Masillar/Pintar",
     orden3: "Manillar",
@@ -122,6 +121,7 @@ const MonitorPedidos: React.FC = () => {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="">Todos los estados</SelectItem>
+            <SelectItem value="pendiente">Pendiente</SelectItem>
             {Object.entries(ordenMap).map(([key, label]) => (
               <SelectItem key={key} value={key}>{label}</SelectItem>
             ))}
